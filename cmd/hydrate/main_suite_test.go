@@ -20,7 +20,7 @@ var hydrateBin string
 
 var _ = BeforeSuite(func() {
 	var err error
-	hydrateBin, err = gexec.Build("code.cloudfoundry.org/windows2016fs/cmd/hydrate")
+	hydrateBin, err = gexec.Build("code.cloudfoundry.org/hydrator/cmd/hydrate")
 	Expect(err).NotTo(HaveOccurred())
 })
 

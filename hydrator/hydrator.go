@@ -8,10 +8,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"code.cloudfoundry.org/windows2016fs/compress"
-	"code.cloudfoundry.org/windows2016fs/downloader"
-	metadata "code.cloudfoundry.org/windows2016fs/oci-metadata"
-	"code.cloudfoundry.org/windows2016fs/registry"
+	"code.cloudfoundry.org/hydrator/compress"
+	"code.cloudfoundry.org/hydrator/downloader"
+	metadata "code.cloudfoundry.org/hydrator/oci-metadata"
+	"code.cloudfoundry.org/hydrator/registry"
 )
 
 type Hydrator struct {

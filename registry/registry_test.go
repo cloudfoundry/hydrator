@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"code.cloudfoundry.org/windows2016fs/registry"
+	"code.cloudfoundry.org/hydrator/registry"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

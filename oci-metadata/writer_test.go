@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	metadata "code.cloudfoundry.org/windows2016fs/oci-metadata"
+	metadata "code.cloudfoundry.org/hydrator/oci-metadata"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	digest "github.com/opencontainers/go-digest"

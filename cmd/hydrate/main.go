@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"code.cloudfoundry.org/windows2016fs/hydrator"
+	"code.cloudfoundry.org/hydrator/hydrator"
 )
 
 func main() {

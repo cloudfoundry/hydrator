@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"code.cloudfoundry.org/windows2016fs/compress"
+	"code.cloudfoundry.org/hydrator/compress"
 
 	"code.cloudfoundry.org/archiver/extractor"
 

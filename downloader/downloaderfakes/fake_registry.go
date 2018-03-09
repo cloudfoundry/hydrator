@@ -4,7 +4,7 @@ package downloaderfakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/windows2016fs/downloader"
+	"code.cloudfoundry.org/hydrator/downloader"
 	"github.com/opencontainers/image-spec/specs-go/v1"
 )
 

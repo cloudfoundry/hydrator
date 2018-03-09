@@ -4,8 +4,8 @@ import (
 	"errors"
 	"io/ioutil"
 
-	"code.cloudfoundry.org/windows2016fs/downloader"
-	"code.cloudfoundry.org/windows2016fs/downloader/downloaderfakes"
+	"code.cloudfoundry.org/hydrator/downloader"
+	"code.cloudfoundry.org/hydrator/downloader/downloaderfakes"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
