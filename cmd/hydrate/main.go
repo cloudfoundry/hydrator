@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	"code.cloudfoundry.org/hydrator/hydrator"
@@ -10,8 +11,9 @@ import (
 
 func main() {
 	outDir, imageName, imageTag, noTarball := parseFlags()
+	logger := log.New(os.Stdout, "", 0)
 
-	if err := hydrator.New(outDir, imageName, imageTag, noTarball).Run(); err != nil {
+	if err := hydrator.New(logger, outDir, imageName, imageTag, noTarball).Run(); err != nil {
 		fmt.Fprintln(os.Stderr, "ERROR: "+err.Error())
 		os.Exit(1)
 	}

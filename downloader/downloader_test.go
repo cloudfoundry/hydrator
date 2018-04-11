@@ -1,9 +1,10 @@
 package downloader_test
 
 import (
-	"bufio"
 	"bytes"
 	"errors"
+	"io"
+	"log"
 
 	"code.cloudfoundry.org/hydrator/downloader"
 	"code.cloudfoundry.org/hydrator/downloader/downloaderfakes"
@@ -27,8 +28,7 @@ var _ = Describe("Downloader", func() {
 		manifest       v1.Manifest
 		registry       *downloaderfakes.FakeRegistry
 		d              *downloader.Downloader
-		buffer         bytes.Buffer
-		logger         *bufio.Writer
+		logBuffer      *bytes.Buffer
 	)
 
 	BeforeEach(func() {
@@ -54,10 +54,8 @@ var _ = Describe("Downloader", func() {
 		registry.ManifestReturnsOnCall(0, manifest, nil)
 		registry.ConfigReturnsOnCall(0, sourceConfig, nil)
 
-		buffer.Reset()
-		logger = bufio.NewWriter(&buffer)
-
-		d = downloader.New(downloadDir, registry, logger)
+		logBuffer = new(bytes.Buffer)
+		d = downloader.New(log.New(io.MultiWriter(GinkgoWriter, logBuffer), "", 0), downloadDir, registry)
 	})
 
 	Describe("Run", func() {
@@ -109,11 +107,10 @@ var _ = Describe("Downloader", func() {
 				Expect(err).NotTo(HaveOccurred())
 
 				Expect(layers[0].Digest).To(Equal(digest.Digest("sha256:layer1")))
-				Expect(logger.Flush()).To(Succeed())
 
-				Expect(buffer.String()).To(MatchRegexp("Attempt [0-9] failed downloading layer with diffID: [[:alnum:]]+, sha256: [[:alnum:]]+: couldn't download layer error 1\n"))
-				Expect(buffer.String()).To(MatchRegexp("Attempt [0-9] failed downloading layer with diffID: [[:alnum:]]+, sha256: [[:alnum:]]+: couldn't download layer error 2\n"))
-				Expect(buffer.String()).To(MatchRegexp("Attempt [0-9] failed downloading layer with diffID: [[:alnum:]]+, sha256: [[:alnum:]]+: couldn't download layer error 3\n"))
+				Expect(logBuffer.String()).To(MatchRegexp("Attempt [0-9] failed downloading layer with diffID: [[:alnum:]]+, sha256: [[:alnum:]]+: couldn't download layer error 1\n"))
+				Expect(logBuffer.String()).To(MatchRegexp("Attempt [0-9] failed downloading layer with diffID: [[:alnum:]]+, sha256: [[:alnum:]]+: couldn't download layer error 2\n"))
+				Expect(logBuffer.String()).To(MatchRegexp("Attempt [0-9] failed downloading layer with diffID: [[:alnum:]]+, sha256: [[:alnum:]]+: couldn't download layer error 3\n"))
 			})
 		})
 

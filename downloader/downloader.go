@@ -2,7 +2,7 @@ package downloader
 
 import (
 	"fmt"
-	"io"
+	"log"
 	"sync"
 	"time"
 
@@ -20,10 +20,10 @@ type Registry interface {
 type Downloader struct {
 	downloadDir string
 	registry    Registry
-	logger      io.Writer
+	logger      *log.Logger
 }
 
-func New(downloadDir string, registry Registry, logger io.Writer) *Downloader {
+func New(logger *log.Logger, downloadDir string, registry Registry) *Downloader {
 	d := &Downloader{
 		downloadDir: downloadDir,
 		registry:    registry,
@@ -57,7 +57,7 @@ func (d *Downloader) Run() ([]v1.Descriptor, []digest.Digest, error) {
 		return nil, nil, fmt.Errorf("mismatch: %d layers, %d diffIds", totalLayers, len(diffIds))
 	}
 
-	fmt.Fprintf(d.logger, "Downloading %d layers...\n", totalLayers)
+	d.logger.Printf("Downloading %d layers...\n", totalLayers)
 	wg := sync.WaitGroup{}
 	errChan := make(chan error, 1)
 
@@ -77,14 +77,14 @@ func (d *Downloader) Run() ([]v1.Descriptor, []digest.Digest, error) {
 
 		wg.Add(1)
 		go func() {
-			fmt.Fprintf(d.logger, "Layer diffID: %.8s, sha256: %.8s begin\n", diffId.Encoded(), l.Digest.Encoded())
+			d.logger.Printf("Layer diffID: %.8s, sha256: %.8s begin\n", diffId.Encoded(), l.Digest.Encoded())
 			defer wg.Done()
 			attempt := 0
 			for {
 				attempt += 1
 				err := d.registry.DownloadLayer(l, d.downloadDir)
 				if err != nil {
-					fmt.Fprintf(d.logger, "Attempt %d failed downloading layer with diffID: %.8s, sha256: %.8s: %s\n", attempt, diffId.Encoded(), l.Digest.Encoded(), err)
+					d.logger.Printf("Attempt %d failed downloading layer with diffID: %.8s, sha256: %.8s: %s\n", attempt, diffId.Encoded(), l.Digest.Encoded(), err)
 
 					if attempt >= 5 {
 						errChan <- &MaxLayerDownloadRetriesError{DiffID: diffId.Encoded(), SHA: l.Digest.Encoded()}
@@ -95,7 +95,7 @@ func (d *Downloader) Run() ([]v1.Descriptor, []digest.Digest, error) {
 					continue
 				}
 
-				fmt.Fprintf(d.logger, "Layer diffID: %.8s, sha256: %.8s end\n", diffId.Encoded(), l.Digest.Encoded())
+				d.logger.Printf("Layer diffID: %.8s, sha256: %.8s end\n", diffId.Encoded(), l.Digest.Encoded())
 				break
 			}
 		}()
