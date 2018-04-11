@@ -1,8 +1,9 @@
 package downloader_test
 
 import (
+	"bufio"
+	"bytes"
 	"errors"
-	"io/ioutil"
 
 	"code.cloudfoundry.org/hydrator/downloader"
 	"code.cloudfoundry.org/hydrator/downloader/downloaderfakes"
@@ -26,6 +27,8 @@ var _ = Describe("Downloader", func() {
 		manifest       v1.Manifest
 		registry       *downloaderfakes.FakeRegistry
 		d              *downloader.Downloader
+		buffer         bytes.Buffer
+		logger         *bufio.Writer
 	)
 
 	BeforeEach(func() {
@@ -51,7 +54,10 @@ var _ = Describe("Downloader", func() {
 		registry.ManifestReturnsOnCall(0, manifest, nil)
 		registry.ConfigReturnsOnCall(0, sourceConfig, nil)
 
-		d = downloader.New(downloadDir, registry, ioutil.Discard)
+		buffer.Reset()
+		logger = bufio.NewWriter(&buffer)
+
+		d = downloader.New(downloadDir, registry, logger)
 	})
 
 	Describe("Run", func() {
@@ -81,6 +87,46 @@ var _ = Describe("Downloader", func() {
 			Expect(dir).To(Equal("some-directory"))
 
 			Expect([]v1.Descriptor{l1, l2}).To(ConsistOf(sourceLayers))
+		})
+
+		Context("downloading a layer fails inconsistently", func() {
+			BeforeEach(func() {
+				registry.DownloadLayerReturnsOnCall(0, errors.New("couldn't download layer error 1"))
+				registry.DownloadLayerReturnsOnCall(1, errors.New("couldn't download layer error 2"))
+				registry.DownloadLayerReturnsOnCall(2, errors.New("couldn't download layer error 3"))
+			})
+
+			It("retries and succeeds", func() {
+				layers, _, err := d.Run()
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(layers[0].Digest).To(Equal(digest.Digest("sha256:layer1")))
+				Expect(registry.DownloadLayerCallCount()).To(Equal(5))
+			})
+
+			It("logs the retries", func() {
+				layers, _, err := d.Run()
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(layers[0].Digest).To(Equal(digest.Digest("sha256:layer1")))
+				Expect(logger.Flush()).To(Succeed())
+
+				Expect(buffer.String()).To(MatchRegexp("Attempt [0-9] failed downloading layer with diffID: [[:alnum:]]+, sha256: [[:alnum:]]+: couldn't download layer error 1\n"))
+				Expect(buffer.String()).To(MatchRegexp("Attempt [0-9] failed downloading layer with diffID: [[:alnum:]]+, sha256: [[:alnum:]]+: couldn't download layer error 2\n"))
+				Expect(buffer.String()).To(MatchRegexp("Attempt [0-9] failed downloading layer with diffID: [[:alnum:]]+, sha256: [[:alnum:]]+: couldn't download layer error 3\n"))
+			})
+		})
+
+		Context("downloading a layer fails every time", func() {
+			BeforeEach(func() {
+				registry.DownloadLayerReturns(errors.New("couldn't download layer"))
+			})
+
+			It("retries each layer the max number of times and then returns a descriptive error", func() {
+				_, _, err := d.Run()
+				Expect(err).To(BeAssignableToTypeOf(&downloader.MaxLayerDownloadRetriesError{}))
+				Expect(registry.DownloadLayerCallCount()).To(BeNumerically(">=", 5))
+			})
 		})
 	})
 
@@ -147,17 +193,6 @@ var _ = Describe("Downloader", func() {
 			_, _, err := d.Run()
 			Expect(err.Error()).To(Equal("invalid container arch: ppc64"))
 			Expect(registry.DownloadLayerCallCount()).To(Equal(0))
-		})
-	})
-
-	Context("downloading a layer fails", func() {
-		BeforeEach(func() {
-			registry.DownloadLayerReturnsOnCall(1, errors.New("couldn't download layer2"))
-		})
-
-		It("returns an error", func() {
-			_, _, err := d.Run()
-			Expect(err.Error()).To(Equal("couldn't download layer2"))
 		})
 	})
 })

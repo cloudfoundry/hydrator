@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"sync"
+	"time"
 
 	digest "github.com/opencontainers/go-digest"
 	"github.com/opencontainers/image-spec/specs-go/v1"
@@ -78,11 +79,25 @@ func (d *Downloader) Run() ([]v1.Descriptor, []digest.Digest, error) {
 		go func() {
 			fmt.Fprintf(d.logger, "Layer diffID: %.8s, sha256: %.8s begin\n", diffId.Encoded(), l.Digest.Encoded())
 			defer wg.Done()
-			if err := d.registry.DownloadLayer(l, d.downloadDir); err != nil {
-				errChan <- err
-				return
+			attempt := 0
+			for {
+				attempt += 1
+				err := d.registry.DownloadLayer(l, d.downloadDir)
+				if err != nil {
+					fmt.Fprintf(d.logger, "Attempt %d failed downloading layer with diffID: %.8s, sha256: %.8s: %s\n", attempt, diffId.Encoded(), l.Digest.Encoded(), err)
+
+					if attempt >= 5 {
+						errChan <- &MaxLayerDownloadRetriesError{DiffID: diffId.Encoded(), SHA: l.Digest.Encoded()}
+						break
+					}
+
+					time.Sleep(time.Duration(attempt) * time.Second)
+					continue
+				}
+
+				fmt.Fprintf(d.logger, "Layer diffID: %.8s, sha256: %.8s end\n", diffId.Encoded(), l.Digest.Encoded())
+				break
 			}
-			fmt.Fprintf(d.logger, "Layer diffID: %.8s, sha256: %.8s end\n", diffId.Encoded(), l.Digest.Encoded())
 		}()
 	}
 
