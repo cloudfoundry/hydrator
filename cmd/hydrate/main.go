@@ -1,30 +1,59 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"log"
 	"os"
 
-	"code.cloudfoundry.org/hydrator/hydrator"
+	"github.com/urfave/cli"
+)
+
+const (
+	exactArgs = iota
+	minArgs
+	maxArgs
 )
 
 func main() {
-	outDir, imageName, imageTag, noTarball := parseFlags()
-	logger := log.New(os.Stdout, "", 0)
+	app := cli.NewApp()
+	app.Name = "hydrate.exe"
 
-	if err := hydrator.New(logger, outDir, imageName, imageTag, noTarball).Run(); err != nil {
-		fmt.Fprintln(os.Stderr, "ERROR: "+err.Error())
-		os.Exit(1)
+	app.Commands = []cli.Command{
+		downloadCommand,
+		addLayerCommand,
+	}
+
+	if err := app.Run(os.Args); err != nil {
+		fatal(err)
 	}
 }
 
-func parseFlags() (string, string, string, bool) {
-	outDir := flag.String("outputDir", os.TempDir(), "Output directory for downloaded image")
-	imageName := flag.String("image", "", "Name of the image to download")
-	imageTag := flag.String("tag", "latest", "Image tag to download")
-	noTarball := flag.Bool("noTarball", false, "Do not output image as a tarball")
-	flag.Parse()
+func checkArgs(context *cli.Context, expected, checkType int) error {
+	var err error
+	cmdName := context.Command.Name
+	switch checkType {
+	case exactArgs:
+		if context.NArg() != expected {
+			err = fmt.Errorf("%s: %q requires exactly %d argument(s)", os.Args[0], cmdName, expected)
+		}
+	case minArgs:
+		if context.NArg() < expected {
+			err = fmt.Errorf("%s: %q requires a minimum of %d argument(s)", os.Args[0], cmdName, expected)
+		}
+	case maxArgs:
+		if context.NArg() > expected {
+			err = fmt.Errorf("%s: %q requires a maximum of %d argument(s)", os.Args[0], cmdName, expected)
+		}
+	}
 
-	return *outDir, *imageName, *imageTag, *noTarball
+	if err != nil {
+		fmt.Printf("Incorrect Usage.\n\n")
+		_ = cli.ShowCommandHelp(context, cmdName)
+		return err
+	}
+	return nil
+}
+
+func fatal(err error) {
+	fmt.Fprintln(os.Stderr, err)
+	os.Exit(1)
 }

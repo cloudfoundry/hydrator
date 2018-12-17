@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"code.cloudfoundry.org/hydrator/downloader"
-	"code.cloudfoundry.org/hydrator/downloader/downloaderfakes"
+	"code.cloudfoundry.org/hydrator/downloader/fakes"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -26,7 +26,7 @@ var _ = Describe("Downloader", func() {
 		sourceConfig   v1.Image
 		manifestConfig v1.Descriptor
 		manifest       v1.Manifest
-		registry       *downloaderfakes.FakeRegistry
+		registry       *fakes.Registry
 		d              *downloader.Downloader
 		logBuffer      *bytes.Buffer
 	)
@@ -49,7 +49,7 @@ var _ = Describe("Downloader", func() {
 			RootFS:       v1.RootFS{Type: "layers", DiffIDs: sourceDiffIds},
 		}
 
-		registry = &downloaderfakes.FakeRegistry{}
+		registry = &fakes.Registry{}
 
 		registry.ManifestReturnsOnCall(0, manifest, nil)
 		registry.ConfigReturnsOnCall(0, sourceConfig, nil)
