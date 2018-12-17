@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -31,50 +32,50 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	var (
-		err     error
-		present bool
-	)
+	var grootBin, grootImageStore, wincBin, diffBin string
+	if runtime.GOOS == "windows" {
+		ociImagePath, keep = os.LookupEnv("OCI_IMAGE_PATH")
 
-	ociImagePath, keep = os.LookupEnv("OCI_IMAGE_PATH")
+		if !keep {
+			var err error
+			ociImagePath, err = ioutil.TempDir("", "oci-image-path")
+			logger := log.New(os.Stdout, "", 0)
 
-	if !keep {
-		ociImagePath, err = ioutil.TempDir("", "oci-image-path")
-		logger := log.New(os.Stdout, "", 0)
+			output, err := exec.Command("powershell", "-command", "[System.Environment]::OSVersion.Version.Build").CombinedOutput()
+			Expect(err).NotTo(HaveOccurred())
 
-		output, err := exec.Command("powershell", "-command", "[System.Environment]::OSVersion.Version.Build").CombinedOutput()
-		Expect(err).NotTo(HaveOccurred())
+			windowsBuild, err := strconv.Atoi(strings.TrimSpace(string(output)))
+			Expect(err).NotTo(HaveOccurred())
 
-		windowsBuild, err := strconv.Atoi(strings.TrimSpace(string(output)))
-		Expect(err).NotTo(HaveOccurred())
+			nanoserverTag := ""
+			if windowsBuild == 16299 {
+				nanoserverTag = "1709"
+			} else {
+				nanoserverTag = "1803"
+			}
 
-		nanoserverTag := ""
-		if windowsBuild == 16299 {
-			nanoserverTag = "1709"
-		} else {
-			nanoserverTag = "1803"
+			imagefetcher.New(logger, ociImagePath, "microsoft/nanoserver", nanoserverTag, true).Run()
+			Expect(err).ToNot(HaveOccurred())
 		}
+		var present bool
 
-		imagefetcher.New(logger, ociImagePath, "microsoft/nanoserver", nanoserverTag, true).Run()
-		Expect(err).ToNot(HaveOccurred())
+		grootBin, present = os.LookupEnv("GROOT_BINARY")
+		Expect(present).To(BeTrue(), "GROOT_BINARY not set")
+
+		grootImageStore, present = os.LookupEnv("GROOT_IMAGE_STORE")
+		Expect(present).To(BeTrue(), "GROOT_IMAGE_STORE not set")
+
+		wincBin, present = os.LookupEnv("WINC_BINARY")
+		Expect(present).To(BeTrue(), "WINC_BINARY not set")
+
+		diffBin, present = os.LookupEnv("DIFF_EXPORTER_BINARY")
+		Expect(present).To(BeTrue(), "DIFF_EXPORTER_BINARY not set")
 	}
-
-	debug, _ := strconv.ParseBool(os.Getenv("DEBUG"))
-
-	grootBin, present := os.LookupEnv("GROOT_BINARY")
-	Expect(present).To(BeTrue(), "GROOT_BINARY not set")
-
-	grootImageStore, present := os.LookupEnv("GROOT_IMAGE_STORE")
-	Expect(present).To(BeTrue(), "GROOT_IMAGE_STORE not set")
-
-	wincBin, present := os.LookupEnv("WINC_BINARY")
-	Expect(present).To(BeTrue(), "WINC_BINARY not set")
-
-	diffBin, present := os.LookupEnv("DIFF_EXPORTER_BINARY")
-	Expect(present).To(BeTrue(), "DIFF_EXPORTER_BINARY not set")
 
 	hydrateBin, err := gexec.Build("code.cloudfoundry.org/hydrator/cmd/hydrate")
 	Expect(err).NotTo(HaveOccurred())
+
+	debug, _ := strconv.ParseBool(os.Getenv("DEBUG"))
 
 	helpers = testhelpers.NewHelpers(wincBin, grootBin, grootImageStore, diffBin, hydrateBin, debug)
 })

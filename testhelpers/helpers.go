@@ -10,7 +10,6 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/Microsoft/hcsshim"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
@@ -162,15 +161,6 @@ func (h *Helpers) CreateVolume(rootfsURI, containerId string) specs.Spec {
 func (h *Helpers) DeleteVolume(id string) {
 	output, err := exec.Command(h.grootBin, "--driver-store", h.grootImageStore, "delete", id).CombinedOutput()
 	ExpectWithOffset(1, err).NotTo(HaveOccurred(), string(output))
-}
-
-func (h *Helpers) ContainerExists(containerId string) bool {
-	query := hcsshim.ComputeSystemQuery{
-		IDs: []string{containerId},
-	}
-	containers, err := hcsshim.GetContainers(query)
-	ExpectWithOffset(1, err).ToNot(HaveOccurred())
-	return len(containers) > 0
 }
 
 func (h *Helpers) ExecInContainer(id string, args []string, detach bool) (*bytes.Buffer, *bytes.Buffer, error) {

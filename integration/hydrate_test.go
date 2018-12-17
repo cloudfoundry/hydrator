@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"strings"
 
@@ -24,6 +25,15 @@ var _ = Describe("Hydrate", func() {
 	var hydrateArgs []string
 
 	Describe("add-layer", func() {
+		BeforeEach(func() {
+			// while it should be possible to run the add-layer command,
+			// on a Linux machine, our tests will not work on Linux because they create containers
+			// We also do not have a need to run this command on Linux
+			if runtime.GOOS != "windows" {
+				Skip("skipping test on non-windows platforms")
+			}
+		})
+
 		Context("when -layer is provided but not -ociImage", func() {
 			It("should throw an error that says -ociImage not provided", func() {
 				hydrateArgs = []string{"add-layer", "--layer", "some-layer"}

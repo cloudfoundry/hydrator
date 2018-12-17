@@ -69,7 +69,7 @@ var _ = Describe("Handler", func() {
 
 			It("returns a useful error", func() {
 				err := h.AddBlob(layerTgzPath, oci.Descriptor{})
-				Expect(err).To(MatchError(fmt.Sprintf("%s is not a valid OCI image: %s\\blobs\\sha256 directory missing", ociImageDir, ociImageDir)))
+				Expect(err).To(MatchError(fmt.Sprintf("%s is not a valid OCI image: %s directory missing", ociImageDir, filepath.Join(ociImageDir, "blobs", "sha256"))))
 			})
 		})
 
