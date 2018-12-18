@@ -6,20 +6,20 @@
   digest = "1:465da067153501b178257aaa0ba18ab34b8e2be36f9a053633400986d878fb76"
   name = "code.cloudfoundry.org/archiver"
   packages = ["extractor"]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "7291196139d7ff307249aef1a9febb710e413047"
 
 [[projects]]
-  digest = "1:f9ae348e1f793dcf9ed930ed47136a67343dbd6809c5c91391322267f4476892"
+  digest = "1:2be791e7b333ff7c06f8fb3dc18a7d70580e9399dbdffd352621d067ff260b6e"
   name = "github.com/Microsoft/go-winio"
   packages = ["."]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "97e4973ce50b2ff5f09635a57e2b88a037aae829"
   version = "v0.4.11"
 
 [[projects]]
   branch = "fix-syscall-race"
-  digest = "1:6f9eaceb0b9bde88673b0d2a58168ef988b4942c7dbfc9b0ff81eccb8862c633"
+  digest = "1:320e39ce94bde51e1845da625b2ce9a79a3882f76685f5f0879bcef01bfb1a31"
   name = "github.com/Microsoft/hcsshim"
   packages = [
     ".",
@@ -38,16 +38,16 @@
     "internal/timeout",
     "internal/wclayer",
   ]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "a7b24f460bcdeaaefe35dcfc059113d45a408577"
   source = "github.com/greenhouse-org/hcsshim"
 
 [[projects]]
   branch = "master"
-  digest = "1:9b0e71863f18fc5de645a263184c8a6409ae731e847b35b25da4be818f1975fa"
+  digest = "1:b1ef763b6334cf7eb68249217b77955fdae4d2475e13d7d38eb4b452f0633944"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "130e6b02ab059e7b717a096f397c5b60111cae74"
 
 [[projects]]
@@ -62,19 +62,19 @@
     "pkg/v1/types",
     "pkg/v1/v1util",
   ]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "68537023cae86a3267a37354535baa614ad29924"
 
 [[projects]]
-  digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
+  digest = "1:4059c14e87a2de3a434430340521b5feece186c1469eff0834c29a63870de3ed"
   name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "5c8c8bd35d3832f5d134ae1e1e375b69a4d25242"
   version = "v1.0.1"
 
 [[projects]]
-  digest = "1:9422368b1aa123a27f1c4d12b63a7d70bc503f3ce7022931ae4881e29ea275b9"
+  digest = "1:4b7ad06825a5ef932f35a66ac4a959facd323d70ed2106c7e2f3fcca07d66cc3"
   name = "github.com/onsi/ginkgo"
   packages = [
     ".",
@@ -103,12 +103,12 @@
     "reporters/stenographer/support/go-isatty",
     "types",
   ]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "9eda700730cba42af70d53180f9dcce9266bc2bc"
   version = "v1.4.0"
 
 [[projects]]
-  digest = "1:d8fc675257c2872fd3257f91f3157df4cf0b7b75f71457554efa4741b4f1b6ef"
+  digest = "1:bb57ca938a5e3e066614a83c16e56c0742791830194a037593615eaabd06cd0e"
   name = "github.com/onsi/gomega"
   packages = [
     ".",
@@ -127,15 +127,15 @@
     "matchers/support/goraph/util",
     "types",
   ]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "c893efa28eb45626cdaa76c9f653b62488858837"
   version = "v1.2.0"
 
 [[projects]]
-  digest = "1:ee4d4af67d93cc7644157882329023ce9a7bcfce956a079069a9405521c7cc8d"
+  digest = "1:e0cc8395ea893c898ff5eb0850f4d9851c1f57c78c232304a026379a47a552d0"
   name = "github.com/opencontainers/go-digest"
   packages = ["."]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "279bed98673dd5bef374d3b6e4b09e2af76183bf"
   version = "v1.0.0-rc1"
 
@@ -146,7 +146,7 @@
     "specs-go",
     "specs-go/v1",
   ]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "ab7389ef9f50030c9b245bc16b981c7ddf192882"
   version = "v1.0.0"
 
@@ -154,23 +154,23 @@
   digest = "1:57234a321bf1f8f98a8a9a5122a2404cc60d0800516f4ab7a7b2375e4b2d19ea"
   name = "github.com/opencontainers/runtime-spec"
   packages = ["specs-go"]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "4e3b9264a330d094b0386c3703c5f379119711e8"
   version = "v1.0.1"
 
 [[projects]]
-  digest = "1:69b1cc331fca23d702bd72f860c6a647afd0aa9fcbc1d0659b1365e26546dd70"
+  digest = "1:d848e2bdc690ea54c4b49894b67a05db318a97ee6561879b814c2c1f82f61406"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "bcd833dfe83d3cebad139e4a29ed79cb2318bf95"
   version = "v1.2.0"
 
 [[projects]]
-  digest = "1:b24d38b282bacf9791408a080f606370efa3d364e4b5fd9ba0f7b87786d3b679"
+  digest = "1:5dba68a1600a235630e208cb7196b24e58fcbb77bb7a6bec08fcd23f081b0a58"
   name = "github.com/urfave/cli"
   packages = ["."]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
   version = "v1.20.0"
 
@@ -179,7 +179,7 @@
   digest = "1:38f553aff0273ad6f367cb0a0f8b6eecbaef8dc6cb8b50e57b6a81c1d5b1e332"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "505ab145d0a99da450461ae2c1a9f6cd10d1f447"
 
 [[projects]]
@@ -191,23 +191,23 @@
     "html/atom",
     "html/charset",
   ]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "a04bdaca5b32abe1c069418fb7088ae607de5bd0"
 
 [[projects]]
   branch = "master"
-  digest = "1:84fd14163225676884ee53f651b2bf93ebd39aa6418d9a3abeeb376d1c52d332"
+  digest = "1:9b40b19d51d7dbeb3475b2fffcac233af0331f3853edeeb4d836fd7b14612f10"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "314a259e304ff91bd6985da2a7149bbf91237993"
 
 [[projects]]
   branch = "master"
-  digest = "1:387e284158b231a5993cd01407562fc211f076a8904821db6993cf8dbf57b948"
+  digest = "1:9bd4be0519c74c08b9c7a57bf432979afc4640c3c08c504ec61990a11721b203"
   name = "golang.org/x/text"
   packages = [
     "encoding",
@@ -228,15 +228,15 @@
     "transform",
     "unicode/cldr",
   ]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "825fc78a2fd6fa0a5447e300189e3219e05e1f25"
 
 [[projects]]
   branch = "v2"
-  digest = "1:6570992c02a2137a20be83990a979b6fe892e20ecdc6b756449989b2a7efb8ae"
+  digest = "1:c85dc78b3426641ebf2a0bbf5b731b5c4613ddb5987dbe218f7e75468dcd56f5"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  pruneopts = "UT"
+  pruneopts = "NUT"
   revision = "eb3733d160e74a9c7e442f435eb3bea458e1d19f"
 
 [solve-meta]
