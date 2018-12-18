@@ -18,7 +18,8 @@
   version = "v0.4.11"
 
 [[projects]]
-  digest = "1:84c1e430d2a4be548bb8023fd9d595eab555808c160c078a2feb7f98e07eaa57"
+  branch = "fix-syscall-race"
+  digest = "1:6f9eaceb0b9bde88673b0d2a58168ef988b4942c7dbfc9b0ff81eccb8862c633"
   name = "github.com/Microsoft/hcsshim"
   packages = [
     ".",
@@ -38,8 +39,8 @@
     "internal/wclayer",
   ]
   pruneopts = "UT"
-  revision = "a83b08327360d83bedf49f8d9f732596dfc13df4"
-  version = "v0.8.3"
+  revision = "a7b24f460bcdeaaefe35dcfc059113d45a408577"
+  source = "github.com/greenhouse-org/hcsshim"
 
 [[projects]]
   branch = "master"
@@ -63,14 +64,6 @@
   ]
   pruneopts = "UT"
   revision = "68537023cae86a3267a37354535baa614ad29924"
-
-[[projects]]
-  digest = "1:cdb47e4091c3817521152e3906b704f1e5d14a73644453c47198b9464abe5b5c"
-  name = "github.com/h2non/filetype"
-  packages = ["matchers"]
-  pruneopts = "UT"
-  revision = "cc14fdc9ca0e4c2bafad7458f6ff79fd3947cfbb"
-  version = "v1.0.5"
 
 [[projects]]
   digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
@@ -174,6 +167,14 @@
   version = "v1.2.0"
 
 [[projects]]
+  digest = "1:b24d38b282bacf9791408a080f606370efa3d364e4b5fd9ba0f7b87786d3b679"
+  name = "github.com/urfave/cli"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
+  version = "v1.20.0"
+
+[[projects]]
   branch = "master"
   digest = "1:38f553aff0273ad6f367cb0a0f8b6eecbaef8dc6cb8b50e57b6a81c1d5b1e332"
   name = "golang.org/x/crypto"
@@ -231,14 +232,6 @@
   revision = "825fc78a2fd6fa0a5447e300189e3219e05e1f25"
 
 [[projects]]
-  digest = "1:91e6a7e3b5f17a749ce2015d6328e7666ccc542d3fc014d99ca9c38615f0f44e"
-  name = "gopkg.in/h2non/filetype.v1"
-  packages = ["types"]
-  pruneopts = "UT"
-  revision = "cc14fdc9ca0e4c2bafad7458f6ff79fd3947cfbb"
-  version = "v1.0.5"
-
-[[projects]]
   branch = "v2"
   digest = "1:6570992c02a2137a20be83990a979b6fe892e20ecdc6b756449989b2a7efb8ae"
   name = "gopkg.in/yaml.v2"
@@ -253,7 +246,7 @@
     "code.cloudfoundry.org/archiver/extractor",
     "github.com/Microsoft/hcsshim",
     "github.com/google/go-containerregistry/pkg/v1/tarball",
-    "github.com/h2non/filetype/matchers",
+    "github.com/google/go-containerregistry/pkg/v1/v1util",
     "github.com/onsi/ginkgo",
     "github.com/onsi/ginkgo/ginkgo",
     "github.com/onsi/gomega",
@@ -263,6 +256,7 @@
     "github.com/opencontainers/image-spec/specs-go",
     "github.com/opencontainers/image-spec/specs-go/v1",
     "github.com/opencontainers/runtime-spec/specs-go",
+    "github.com/urfave/cli",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
