@@ -1,10 +1,12 @@
 package hydrate_test
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -31,14 +33,18 @@ var (
 	helpers      *testhelpers.Helpers
 )
 
-var _ = BeforeSuite(func() {
-	var grootBin, grootImageStore, wincBin, diffBin string
+var _ = SynchronizedBeforeSuite(func() []byte {
+	var wincBin, grootBin, grootImageStore, diffBin, beforeSuiteOciImagePath string
+
+	hydrateBin, err := gexec.Build("code.cloudfoundry.org/hydrator/cmd/hydrate")
+	Expect(err).NotTo(HaveOccurred())
+
 	if runtime.GOOS == "windows" {
-		ociImagePath, keep = os.LookupEnv("OCI_IMAGE_PATH")
+		beforeSuiteOciImagePath, keep = os.LookupEnv("OCI_IMAGE_PATH")
 
 		if !keep {
 			var err error
-			ociImagePath, err = ioutil.TempDir("", "oci-image-path")
+			beforeSuiteOciImagePath, err = ioutil.TempDir("", "oci-image-path")
 			logger := log.New(os.Stdout, "", 0)
 
 			output, err := exec.Command("powershell", "-command", "[System.Environment]::OSVersion.Version.Build").CombinedOutput()
@@ -54,7 +60,7 @@ var _ = BeforeSuite(func() {
 				nanoserverTag = "1803"
 			}
 
-			imagefetcher.New(logger, ociImagePath, "microsoft/nanoserver", nanoserverTag, true).Run()
+			imagefetcher.New(logger, beforeSuiteOciImagePath, "microsoft/nanoserver", nanoserverTag, true).Run()
 			Expect(err).ToNot(HaveOccurred())
 		}
 		var present bool
@@ -70,17 +76,29 @@ var _ = BeforeSuite(func() {
 
 		diffBin, present = os.LookupEnv("DIFF_EXPORTER_BINARY")
 		Expect(present).To(BeTrue(), "DIFF_EXPORTER_BINARY not set")
+
+		// create a temporary test helpers object so we can "groot pull" on one node only
+		rootfsURI := fmt.Sprintf("oci:///%s", filepath.ToSlash(beforeSuiteOciImagePath))
+		testhelpers.NewHelpers(wincBin, grootBin, grootImageStore, diffBin, hydrateBin, true).GrootPull(rootfsURI)
 	}
 
-	hydrateBin, err := gexec.Build("code.cloudfoundry.org/hydrator/cmd/hydrate")
-	Expect(err).NotTo(HaveOccurred())
+	return []byte(fmt.Sprintf("%s^%s^%s^%s^%s^%s",
+		wincBin, grootBin, grootImageStore, diffBin, hydrateBin, beforeSuiteOciImagePath))
+
+}, func(data []byte) {
+	helperArgs := strings.Split(string(data), "^")
+	wincBin := helperArgs[0]
+	grootBin := helperArgs[1]
+	grootImageStore := helperArgs[2]
+	diffBin := helperArgs[3]
+	hydrateBin := helperArgs[4]
+	ociImagePath = helperArgs[5]
 
 	debug, _ := strconv.ParseBool(os.Getenv("DEBUG"))
-
 	helpers = testhelpers.NewHelpers(wincBin, grootBin, grootImageStore, diffBin, hydrateBin, debug)
 })
 
-var _ = AfterSuite(func() {
+var _ = SynchronizedAfterSuite(func() {}, func() {
 	gexec.CleanupBuildArtifacts()
 
 	if !keep {

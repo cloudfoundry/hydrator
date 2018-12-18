@@ -158,6 +158,15 @@ func (h *Helpers) CreateVolume(rootfsURI, containerId string) specs.Spec {
 	return spec
 }
 
+func (h *Helpers) GrootPull(rootfsURI string) {
+	stdOut := new(bytes.Buffer)
+	stdErr := new(bytes.Buffer)
+	cmd := exec.Command(h.grootBin, "--driver-store", h.grootImageStore, "pull", rootfsURI)
+	cmd.Stdout = stdOut
+	cmd.Stderr = stdErr
+	ExpectWithOffset(1, cmd.Run()).To(Succeed(), fmt.Sprintf("groot stdout: %s\n\n groot stderr: %s\n\n", stdOut.String(), stdErr.String()))
+}
+
 func (h *Helpers) DeleteVolume(id string) {
 	output, err := exec.Command(h.grootBin, "--driver-store", h.grootImageStore, "delete", id).CombinedOutput()
 	ExpectWithOffset(1, err).NotTo(HaveOccurred(), string(output))
