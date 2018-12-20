@@ -53,5 +53,4 @@ required = ["github.com/onsi/ginkgo/ginkgo"]
 
 [[constraint]]
   name = "github.com/Microsoft/hcsshim"
-  branch = "fix-syscall-race"
-  source = "github.com/greenhouse-org/hcsshim"
+  branch = "master"

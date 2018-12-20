@@ -18,8 +18,8 @@
   version = "v0.4.11"
 
 [[projects]]
-  branch = "fix-syscall-race"
-  digest = "1:320e39ce94bde51e1845da625b2ce9a79a3882f76685f5f0879bcef01bfb1a31"
+  branch = "master"
+  digest = "1:b4596cb8b7ea48400ae955d51e12c46a82ee2e989fee407cef720783a30f3bda"
   name = "github.com/Microsoft/hcsshim"
   packages = [
     ".",
@@ -39,8 +39,7 @@
     "internal/wclayer",
   ]
   pruneopts = "NUT"
-  revision = "a7b24f460bcdeaaefe35dcfc059113d45a408577"
-  source = "github.com/greenhouse-org/hcsshim"
+  revision = "6ea6731a1275ab8ee01920facc942cdd919993d8"
 
 [[projects]]
   branch = "master"
