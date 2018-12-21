@@ -24,6 +24,111 @@ import (
 var _ = Describe("Hydrate", func() {
 	var hydrateArgs []string
 
+	Describe("remove-layer", func() {
+		BeforeEach(func() {
+			// while it should be possible to run the remove-layer command,
+			// on a Linux machine, our tests will not work on Linux because they create containers
+			// We also do not have a need to run this command on Linux
+			if runtime.GOOS != "windows" {
+				Skip("skipping test on non-windows platforms")
+			}
+		})
+
+		Context("when -ociImage is not provided", func() {
+			It("should throw an error that says -ociImage is not provided", func() {
+				hydrateArgs = []string{"remove-layer"}
+				hydrateSess := helpers.RunHydrate(hydrateArgs)
+				Eventually(hydrateSess).Should(gexec.Exit())
+				Expect(hydrateSess.ExitCode()).ToNot(Equal(0))
+				Expect(string(hydrateSess.Err.Contents())).To(ContainSubstring("ERROR: Missing option -ociImage"))
+			})
+		})
+
+		Context("when -ociImage is provided", func() {
+			var (
+				testOciImagePath string
+			)
+
+			Context("the oci image is valid", func() {
+				var (
+					verificationBundlePath  string
+					verificationContainerId string
+					newLayer                string
+					rootfsURI               string
+				)
+
+				BeforeEach(func() {
+					var err error
+					testOciImagePath, err = ioutil.TempDir("", "test-oci-image")
+					Expect(err).NotTo(HaveOccurred())
+
+					helpers.CopyOciImage(ociImagePath, testOciImagePath)
+
+					// add a "hello" layer to be removed
+					rootfsURI = fmt.Sprintf("oci:///%s", filepath.ToSlash(testOciImagePath))
+					newLayer = helpers.CreateHelloLayer(rootfsURI)
+					hydrateArgs := []string{"add-layer", "--layer", newLayer, "--ociImage", testOciImagePath}
+					hydrateSess := helpers.RunHydrate(hydrateArgs)
+					Eventually(hydrateSess).Should(gexec.Exit())
+					Expect(hydrateSess.ExitCode()).To(Equal(0))
+				})
+
+				AfterEach(func() {
+					Expect(os.RemoveAll(testOciImagePath)).To(Succeed())
+					Expect(os.RemoveAll(filepath.Dir(newLayer))).To(Succeed())
+					helpers.DeleteContainer(verificationContainerId)
+					helpers.DeleteVolume(verificationContainerId)
+					Expect(os.RemoveAll(verificationBundlePath)).To(Succeed())
+				})
+
+				It("should remove the top layer from the oci image", func() {
+					hydrateArgs := []string{"remove-layer", "--ociImage", testOciImagePath}
+					hydrateSess := helpers.RunHydrate(hydrateArgs)
+
+					Eventually(hydrateSess).Should(gexec.Exit())
+					Expect(hydrateSess.ExitCode()).To(Equal(0))
+
+					verificationContainerId, verificationBundlePath = helpers.CreateContainer(rootfsURI)
+
+					_, _, err := helpers.ExecInContainer(verificationContainerId, []string{"cmd.exe", "/c", "type C:\\hello.txt"}, false)
+					Expect(err).NotTo(Succeed())
+				})
+			})
+
+			Context("when ociImage does not exist", func() {
+				It("exits with an error", func() {
+					hydrateArgs := []string{"remove-layer", "--ociImage", "image/that/doesnt/exist"}
+					hydrateSess := helpers.RunHydrate(hydrateArgs)
+
+					Eventually(hydrateSess).Should(gexec.Exit())
+					Expect(hydrateSess.ExitCode()).NotTo(Equal(0))
+					Expect(string(hydrateSess.Err.Contents())).To(ContainSubstring("image\\that\\doesnt\\exist\\index.json: The system cannot find the path specified"))
+				})
+			})
+
+			Context("when ociImage is not valid", func() {
+				var invalidImagePath string
+
+				BeforeEach(func() {
+					var err error
+					invalidImagePath, err = ioutil.TempDir("", "invalid-image")
+					Expect(err).NotTo(HaveOccurred())
+				})
+				AfterEach(func() {
+					Expect(os.RemoveAll(invalidImagePath)).To(Succeed())
+				})
+
+				It("exits with an error", func() {
+					hydrateArgs := []string{"remove-layer", "--ociImage", invalidImagePath}
+					hydrateSess := helpers.RunHydrate(hydrateArgs)
+
+					Eventually(hydrateSess).Should(gexec.Exit())
+					Expect(hydrateSess.ExitCode()).NotTo(Equal(0))
+					Expect(string(hydrateSess.Err.Contents())).To(ContainSubstring("couldn't load index.json"))
+				})
+			})
+		})
+	})
 	Describe("add-layer", func() {
 		BeforeEach(func() {
 			// while it should be possible to run the add-layer command,
@@ -74,7 +179,7 @@ var _ = Describe("Hydrate", func() {
 
 			AfterEach(func() {
 				Expect(os.RemoveAll(testOciImagePath)).To(Succeed())
-				Expect(os.RemoveAll(newLayer)).To(Succeed())
+				Expect(os.RemoveAll(filepath.Dir(newLayer))).To(Succeed())
 			})
 
 			Context("the layer and oci image are valid", func() {

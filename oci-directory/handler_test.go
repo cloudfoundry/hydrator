@@ -29,12 +29,12 @@ var _ = Describe("Handler", func() {
 
 	BeforeEach(func() {
 		var err error
-		ociImageDir, err = ioutil.TempDir("", "layeradder.ociimagedir")
+		ociImageDir, err = ioutil.TempDir("", "layermodifier.ociimagedir")
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(os.MkdirAll(filepath.Join(ociImageDir, "blobs", "sha256"), 0755)).To(Succeed())
 
-		layerDir, err = ioutil.TempDir("", "layeradder.layerdir")
+		layerDir, err = ioutil.TempDir("", "oci-directory-layerdir")
 		Expect(err).NotTo(HaveOccurred())
 
 		layerTgzPath = filepath.Join(layerDir, "my-new-layer.tgz")
@@ -77,6 +77,48 @@ var _ = Describe("Handler", func() {
 			It("returns a useful error", func() {
 				err := h.AddBlob(layerTgzPath, oci.Descriptor{Digest: "notadigest"})
 				Expect(err).To(Equal(digest.ErrDigestInvalidFormat))
+			})
+		})
+	})
+
+	Describe("RemoveTopBlob", func() {
+		Context("the oci image directory has a blobs/sha256 sub directory", func() {
+			Context("the layer exists in the directory", func() {
+				BeforeEach(func() {
+					layerDescriptor := oci.Descriptor{
+						Digest: digest.NewDigestFromEncoded("sha256", layerTgzSHA256),
+					}
+
+					Expect(h.AddBlob(layerTgzPath, layerDescriptor)).To(Succeed())
+				})
+
+				It("removes the layer from the blobs/sha256 sub directory", func() {
+					_, err := ioutil.ReadFile(filepath.Join(ociImageDir, "blobs", "sha256", layerTgzSHA256))
+					Expect(err).ToNot(HaveOccurred())
+
+					Expect(h.RemoveTopBlob(layerTgzSHA256)).To(Succeed())
+
+					_, err = ioutil.ReadFile(filepath.Join(ociImageDir, "blobs", "sha256", layerTgzSHA256))
+					Expect(err).To(HaveOccurred())
+				})
+			})
+		})
+
+		Context("the layer does not exist in the directory", func() {
+			It("returns a useful error", func() {
+				err := h.RemoveTopBlob(layerTgzSHA256)
+				Expect(err).To(MatchError(fmt.Sprintf("%s does not contain layer: %s", ociImageDir, layerTgzSHA256)))
+			})
+		})
+
+		Context("the oci image directory does not have a blobs/sha256 sub directory", func() {
+			BeforeEach(func() {
+				Expect(os.RemoveAll(filepath.Join(ociImageDir, "blobs", "sha256"))).To(Succeed())
+			})
+
+			It("returns a useful error", func() {
+				err := h.RemoveTopBlob(layerTgzSHA256)
+				Expect(err).To(MatchError(fmt.Sprintf("%s is not a valid OCI image: %s directory missing", ociImageDir, filepath.Join(ociImageDir, "blobs", "sha256"))))
 			})
 		})
 	})

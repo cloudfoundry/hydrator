@@ -1,4 +1,4 @@
-package layeradder
+package layermodifier
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -9,5 +9,5 @@ import (
 
 func TestDownloader(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "LayerAdder Suite")
+	RunSpecs(t, "LayerModifier Suite")
 }

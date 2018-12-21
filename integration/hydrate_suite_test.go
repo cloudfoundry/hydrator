@@ -45,6 +45,7 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 		if !keep {
 			var err error
 			beforeSuiteOciImagePath, err = ioutil.TempDir("", "oci-image-path")
+
 			logger := log.New(os.Stdout, "", 0)
 
 			output, err := exec.Command("powershell", "-command", "[System.Environment]::OSVersion.Version.Build").CombinedOutput()

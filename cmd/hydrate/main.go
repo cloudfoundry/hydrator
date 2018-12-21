@@ -20,6 +20,7 @@ func main() {
 	app.Commands = []cli.Command{
 		downloadCommand,
 		addLayerCommand,
+		removeLayerCommand,
 	}
 
 	if err := app.Run(os.Args); err != nil {

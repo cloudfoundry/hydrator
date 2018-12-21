@@ -1,8 +1,10 @@
-package layeradder
+package layermodifier
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/google/go-containerregistry/pkg/v1/tarball"
 	"github.com/google/go-containerregistry/pkg/v1/v1util"
@@ -13,22 +15,23 @@ import (
 //go:generate counterfeiter -o fakes/oci_directory.go --fake-name OCIDirectory . OCIDirectory
 type OCIDirectory interface {
 	AddBlob(srcPath string, blobDescriptor oci.Descriptor) error
+	RemoveTopBlob(sha256 string) error
 	ClearMetadata() error
 	ReadMetadata() (oci.Manifest, oci.Image, error)
 	WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest) error
 }
 
-type LayerAdder struct {
+type LayerModifier struct {
 	ociDirectory OCIDirectory
 }
 
-func New(ociDirectory OCIDirectory) *LayerAdder {
-	return &LayerAdder{
+func New(ociDirectory OCIDirectory) *LayerModifier {
+	return &LayerModifier{
 		ociDirectory: ociDirectory,
 	}
 }
 
-func (l *LayerAdder) Add(layerTgzPath string) error {
+func (l *LayerModifier) AddLayer(layerTgzPath string) error {
 	descriptor, diffId, err := l.getLayerDescriptor(layerTgzPath)
 	if err != nil {
 		return err
@@ -52,7 +55,32 @@ func (l *LayerAdder) Add(layerTgzPath string) error {
 	return l.ociDirectory.WriteMetadata(newLayers, newDiffIDs)
 }
 
-func (l *LayerAdder) getLayerDescriptor(layerTgzPath string) (oci.Descriptor, digest.Digest, error) {
+func (l *LayerModifier) RemoveTopLayer() error {
+	manifest, config, err := l.ociDirectory.ReadMetadata()
+	if err != nil {
+		return err
+	}
+
+	if err := l.ociDirectory.ClearMetadata(); err != nil {
+		return err
+	}
+
+	if len(manifest.Layers) == 0 {
+		return errors.New("the oci image doesn't contain any layers")
+	}
+
+	lastLayer := manifest.Layers[len(manifest.Layers)-1]
+	layerDigest := (strings.Split(string(lastLayer.Digest), ":"))[1] //lastLayer.Digest = "sha256:LAYER_SHA"
+	if err := l.ociDirectory.RemoveTopBlob(layerDigest); err != nil {
+		return err
+	}
+
+	newLayers := manifest.Layers[:len(manifest.Layers)-1]
+	newDiffIDs := config.RootFS.DiffIDs[:len(config.RootFS.DiffIDs)-1]
+	return l.ociDirectory.WriteMetadata(newLayers, newDiffIDs)
+}
+
+func (l *LayerModifier) getLayerDescriptor(layerTgzPath string) (oci.Descriptor, digest.Digest, error) {
 	layerfd, err := os.Open(layerTgzPath)
 	if err != nil {
 		return oci.Descriptor{}, "", err

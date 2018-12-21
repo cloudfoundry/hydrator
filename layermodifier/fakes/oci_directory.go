@@ -2,19 +2,19 @@
 package fakes
 
 import (
-	sync "sync"
+	"sync"
 
-	layeradder "code.cloudfoundry.org/hydrator/layeradder"
+	"code.cloudfoundry.org/hydrator/layermodifier"
 	digest "github.com/opencontainers/go-digest"
-	v1 "github.com/opencontainers/image-spec/specs-go/v1"
+	oci "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
 type OCIDirectory struct {
-	AddBlobStub        func(string, v1.Descriptor) error
+	AddBlobStub        func(srcPath string, blobDescriptor oci.Descriptor) error
 	addBlobMutex       sync.RWMutex
 	addBlobArgsForCall []struct {
-		arg1 string
-		arg2 v1.Descriptor
+		srcPath        string
+		blobDescriptor oci.Descriptor
 	}
 	addBlobReturns struct {
 		result1 error
@@ -22,35 +22,44 @@ type OCIDirectory struct {
 	addBlobReturnsOnCall map[int]struct {
 		result1 error
 	}
+	RemoveTopBlobStub        func(sha256 string) error
+	removeTopBlobMutex       sync.RWMutex
+	removeTopBlobArgsForCall []struct {
+		sha256 string
+	}
+	removeTopBlobReturns struct {
+		result1 error
+	}
+	removeTopBlobReturnsOnCall map[int]struct {
+		result1 error
+	}
 	ClearMetadataStub        func() error
 	clearMetadataMutex       sync.RWMutex
-	clearMetadataArgsForCall []struct {
-	}
-	clearMetadataReturns struct {
+	clearMetadataArgsForCall []struct{}
+	clearMetadataReturns     struct {
 		result1 error
 	}
 	clearMetadataReturnsOnCall map[int]struct {
 		result1 error
 	}
-	ReadMetadataStub        func() (v1.Manifest, v1.Image, error)
+	ReadMetadataStub        func() (oci.Manifest, oci.Image, error)
 	readMetadataMutex       sync.RWMutex
-	readMetadataArgsForCall []struct {
-	}
-	readMetadataReturns struct {
-		result1 v1.Manifest
-		result2 v1.Image
+	readMetadataArgsForCall []struct{}
+	readMetadataReturns     struct {
+		result1 oci.Manifest
+		result2 oci.Image
 		result3 error
 	}
 	readMetadataReturnsOnCall map[int]struct {
-		result1 v1.Manifest
-		result2 v1.Image
+		result1 oci.Manifest
+		result2 oci.Image
 		result3 error
 	}
-	WriteMetadataStub        func([]v1.Descriptor, []digest.Digest) error
+	WriteMetadataStub        func(layers []oci.Descriptor, diffIds []digest.Digest) error
 	writeMetadataMutex       sync.RWMutex
 	writeMetadataArgsForCall []struct {
-		arg1 []v1.Descriptor
-		arg2 []digest.Digest
+		layers  []oci.Descriptor
+		diffIds []digest.Digest
 	}
 	writeMetadataReturns struct {
 		result1 error
@@ -62,23 +71,22 @@ type OCIDirectory struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *OCIDirectory) AddBlob(arg1 string, arg2 v1.Descriptor) error {
+func (fake *OCIDirectory) AddBlob(srcPath string, blobDescriptor oci.Descriptor) error {
 	fake.addBlobMutex.Lock()
 	ret, specificReturn := fake.addBlobReturnsOnCall[len(fake.addBlobArgsForCall)]
 	fake.addBlobArgsForCall = append(fake.addBlobArgsForCall, struct {
-		arg1 string
-		arg2 v1.Descriptor
-	}{arg1, arg2})
-	fake.recordInvocation("AddBlob", []interface{}{arg1, arg2})
+		srcPath        string
+		blobDescriptor oci.Descriptor
+	}{srcPath, blobDescriptor})
+	fake.recordInvocation("AddBlob", []interface{}{srcPath, blobDescriptor})
 	fake.addBlobMutex.Unlock()
 	if fake.AddBlobStub != nil {
-		return fake.AddBlobStub(arg1, arg2)
+		return fake.AddBlobStub(srcPath, blobDescriptor)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.addBlobReturns
-	return fakeReturns.result1
+	return fake.addBlobReturns.result1
 }
 
 func (fake *OCIDirectory) AddBlobCallCount() int {
@@ -87,22 +95,13 @@ func (fake *OCIDirectory) AddBlobCallCount() int {
 	return len(fake.addBlobArgsForCall)
 }
 
-func (fake *OCIDirectory) AddBlobCalls(stub func(string, v1.Descriptor) error) {
-	fake.addBlobMutex.Lock()
-	defer fake.addBlobMutex.Unlock()
-	fake.AddBlobStub = stub
-}
-
-func (fake *OCIDirectory) AddBlobArgsForCall(i int) (string, v1.Descriptor) {
+func (fake *OCIDirectory) AddBlobArgsForCall(i int) (string, oci.Descriptor) {
 	fake.addBlobMutex.RLock()
 	defer fake.addBlobMutex.RUnlock()
-	argsForCall := fake.addBlobArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2
+	return fake.addBlobArgsForCall[i].srcPath, fake.addBlobArgsForCall[i].blobDescriptor
 }
 
 func (fake *OCIDirectory) AddBlobReturns(result1 error) {
-	fake.addBlobMutex.Lock()
-	defer fake.addBlobMutex.Unlock()
 	fake.AddBlobStub = nil
 	fake.addBlobReturns = struct {
 		result1 error
@@ -110,8 +109,6 @@ func (fake *OCIDirectory) AddBlobReturns(result1 error) {
 }
 
 func (fake *OCIDirectory) AddBlobReturnsOnCall(i int, result1 error) {
-	fake.addBlobMutex.Lock()
-	defer fake.addBlobMutex.Unlock()
 	fake.AddBlobStub = nil
 	if fake.addBlobReturnsOnCall == nil {
 		fake.addBlobReturnsOnCall = make(map[int]struct {
@@ -123,11 +120,58 @@ func (fake *OCIDirectory) AddBlobReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
+func (fake *OCIDirectory) RemoveTopBlob(sha256 string) error {
+	fake.removeTopBlobMutex.Lock()
+	ret, specificReturn := fake.removeTopBlobReturnsOnCall[len(fake.removeTopBlobArgsForCall)]
+	fake.removeTopBlobArgsForCall = append(fake.removeTopBlobArgsForCall, struct {
+		sha256 string
+	}{sha256})
+	fake.recordInvocation("RemoveTopBlob", []interface{}{sha256})
+	fake.removeTopBlobMutex.Unlock()
+	if fake.RemoveTopBlobStub != nil {
+		return fake.RemoveTopBlobStub(sha256)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fake.removeTopBlobReturns.result1
+}
+
+func (fake *OCIDirectory) RemoveTopBlobCallCount() int {
+	fake.removeTopBlobMutex.RLock()
+	defer fake.removeTopBlobMutex.RUnlock()
+	return len(fake.removeTopBlobArgsForCall)
+}
+
+func (fake *OCIDirectory) RemoveTopBlobArgsForCall(i int) string {
+	fake.removeTopBlobMutex.RLock()
+	defer fake.removeTopBlobMutex.RUnlock()
+	return fake.removeTopBlobArgsForCall[i].sha256
+}
+
+func (fake *OCIDirectory) RemoveTopBlobReturns(result1 error) {
+	fake.RemoveTopBlobStub = nil
+	fake.removeTopBlobReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *OCIDirectory) RemoveTopBlobReturnsOnCall(i int, result1 error) {
+	fake.RemoveTopBlobStub = nil
+	if fake.removeTopBlobReturnsOnCall == nil {
+		fake.removeTopBlobReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.removeTopBlobReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *OCIDirectory) ClearMetadata() error {
 	fake.clearMetadataMutex.Lock()
 	ret, specificReturn := fake.clearMetadataReturnsOnCall[len(fake.clearMetadataArgsForCall)]
-	fake.clearMetadataArgsForCall = append(fake.clearMetadataArgsForCall, struct {
-	}{})
+	fake.clearMetadataArgsForCall = append(fake.clearMetadataArgsForCall, struct{}{})
 	fake.recordInvocation("ClearMetadata", []interface{}{})
 	fake.clearMetadataMutex.Unlock()
 	if fake.ClearMetadataStub != nil {
@@ -136,8 +180,7 @@ func (fake *OCIDirectory) ClearMetadata() error {
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.clearMetadataReturns
-	return fakeReturns.result1
+	return fake.clearMetadataReturns.result1
 }
 
 func (fake *OCIDirectory) ClearMetadataCallCount() int {
@@ -146,15 +189,7 @@ func (fake *OCIDirectory) ClearMetadataCallCount() int {
 	return len(fake.clearMetadataArgsForCall)
 }
 
-func (fake *OCIDirectory) ClearMetadataCalls(stub func() error) {
-	fake.clearMetadataMutex.Lock()
-	defer fake.clearMetadataMutex.Unlock()
-	fake.ClearMetadataStub = stub
-}
-
 func (fake *OCIDirectory) ClearMetadataReturns(result1 error) {
-	fake.clearMetadataMutex.Lock()
-	defer fake.clearMetadataMutex.Unlock()
 	fake.ClearMetadataStub = nil
 	fake.clearMetadataReturns = struct {
 		result1 error
@@ -162,8 +197,6 @@ func (fake *OCIDirectory) ClearMetadataReturns(result1 error) {
 }
 
 func (fake *OCIDirectory) ClearMetadataReturnsOnCall(i int, result1 error) {
-	fake.clearMetadataMutex.Lock()
-	defer fake.clearMetadataMutex.Unlock()
 	fake.ClearMetadataStub = nil
 	if fake.clearMetadataReturnsOnCall == nil {
 		fake.clearMetadataReturnsOnCall = make(map[int]struct {
@@ -175,11 +208,10 @@ func (fake *OCIDirectory) ClearMetadataReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
-func (fake *OCIDirectory) ReadMetadata() (v1.Manifest, v1.Image, error) {
+func (fake *OCIDirectory) ReadMetadata() (oci.Manifest, oci.Image, error) {
 	fake.readMetadataMutex.Lock()
 	ret, specificReturn := fake.readMetadataReturnsOnCall[len(fake.readMetadataArgsForCall)]
-	fake.readMetadataArgsForCall = append(fake.readMetadataArgsForCall, struct {
-	}{})
+	fake.readMetadataArgsForCall = append(fake.readMetadataArgsForCall, struct{}{})
 	fake.recordInvocation("ReadMetadata", []interface{}{})
 	fake.readMetadataMutex.Unlock()
 	if fake.ReadMetadataStub != nil {
@@ -188,8 +220,7 @@ func (fake *OCIDirectory) ReadMetadata() (v1.Manifest, v1.Image, error) {
 	if specificReturn {
 		return ret.result1, ret.result2, ret.result3
 	}
-	fakeReturns := fake.readMetadataReturns
-	return fakeReturns.result1, fakeReturns.result2, fakeReturns.result3
+	return fake.readMetadataReturns.result1, fake.readMetadataReturns.result2, fake.readMetadataReturns.result3
 }
 
 func (fake *OCIDirectory) ReadMetadataCallCount() int {
@@ -198,68 +229,57 @@ func (fake *OCIDirectory) ReadMetadataCallCount() int {
 	return len(fake.readMetadataArgsForCall)
 }
 
-func (fake *OCIDirectory) ReadMetadataCalls(stub func() (v1.Manifest, v1.Image, error)) {
-	fake.readMetadataMutex.Lock()
-	defer fake.readMetadataMutex.Unlock()
-	fake.ReadMetadataStub = stub
-}
-
-func (fake *OCIDirectory) ReadMetadataReturns(result1 v1.Manifest, result2 v1.Image, result3 error) {
-	fake.readMetadataMutex.Lock()
-	defer fake.readMetadataMutex.Unlock()
+func (fake *OCIDirectory) ReadMetadataReturns(result1 oci.Manifest, result2 oci.Image, result3 error) {
 	fake.ReadMetadataStub = nil
 	fake.readMetadataReturns = struct {
-		result1 v1.Manifest
-		result2 v1.Image
+		result1 oci.Manifest
+		result2 oci.Image
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *OCIDirectory) ReadMetadataReturnsOnCall(i int, result1 v1.Manifest, result2 v1.Image, result3 error) {
-	fake.readMetadataMutex.Lock()
-	defer fake.readMetadataMutex.Unlock()
+func (fake *OCIDirectory) ReadMetadataReturnsOnCall(i int, result1 oci.Manifest, result2 oci.Image, result3 error) {
 	fake.ReadMetadataStub = nil
 	if fake.readMetadataReturnsOnCall == nil {
 		fake.readMetadataReturnsOnCall = make(map[int]struct {
-			result1 v1.Manifest
-			result2 v1.Image
+			result1 oci.Manifest
+			result2 oci.Image
 			result3 error
 		})
 	}
 	fake.readMetadataReturnsOnCall[i] = struct {
-		result1 v1.Manifest
-		result2 v1.Image
+		result1 oci.Manifest
+		result2 oci.Image
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *OCIDirectory) WriteMetadata(arg1 []v1.Descriptor, arg2 []digest.Digest) error {
-	var arg1Copy []v1.Descriptor
-	if arg1 != nil {
-		arg1Copy = make([]v1.Descriptor, len(arg1))
-		copy(arg1Copy, arg1)
+func (fake *OCIDirectory) WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest) error {
+	var layersCopy []oci.Descriptor
+	if layers != nil {
+		layersCopy = make([]oci.Descriptor, len(layers))
+		copy(layersCopy, layers)
 	}
-	var arg2Copy []digest.Digest
-	if arg2 != nil {
-		arg2Copy = make([]digest.Digest, len(arg2))
-		copy(arg2Copy, arg2)
+	var diffIdsCopy []digest.Digest
+	if diffIds != nil {
+		diffIdsCopy = make([]digest.Digest, len(diffIds))
+		copy(diffIdsCopy, diffIds)
 	}
 	fake.writeMetadataMutex.Lock()
 	ret, specificReturn := fake.writeMetadataReturnsOnCall[len(fake.writeMetadataArgsForCall)]
 	fake.writeMetadataArgsForCall = append(fake.writeMetadataArgsForCall, struct {
-		arg1 []v1.Descriptor
-		arg2 []digest.Digest
-	}{arg1Copy, arg2Copy})
-	fake.recordInvocation("WriteMetadata", []interface{}{arg1Copy, arg2Copy})
+		layers  []oci.Descriptor
+		diffIds []digest.Digest
+	}{layersCopy, diffIdsCopy})
+	fake.recordInvocation("WriteMetadata", []interface{}{layersCopy, diffIdsCopy})
 	fake.writeMetadataMutex.Unlock()
 	if fake.WriteMetadataStub != nil {
-		return fake.WriteMetadataStub(arg1, arg2)
+		return fake.WriteMetadataStub(layers, diffIds)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.writeMetadataReturns
-	return fakeReturns.result1
+	return fake.writeMetadataReturns.result1
 }
 
 func (fake *OCIDirectory) WriteMetadataCallCount() int {
@@ -268,22 +288,13 @@ func (fake *OCIDirectory) WriteMetadataCallCount() int {
 	return len(fake.writeMetadataArgsForCall)
 }
 
-func (fake *OCIDirectory) WriteMetadataCalls(stub func([]v1.Descriptor, []digest.Digest) error) {
-	fake.writeMetadataMutex.Lock()
-	defer fake.writeMetadataMutex.Unlock()
-	fake.WriteMetadataStub = stub
-}
-
-func (fake *OCIDirectory) WriteMetadataArgsForCall(i int) ([]v1.Descriptor, []digest.Digest) {
+func (fake *OCIDirectory) WriteMetadataArgsForCall(i int) ([]oci.Descriptor, []digest.Digest) {
 	fake.writeMetadataMutex.RLock()
 	defer fake.writeMetadataMutex.RUnlock()
-	argsForCall := fake.writeMetadataArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2
+	return fake.writeMetadataArgsForCall[i].layers, fake.writeMetadataArgsForCall[i].diffIds
 }
 
 func (fake *OCIDirectory) WriteMetadataReturns(result1 error) {
-	fake.writeMetadataMutex.Lock()
-	defer fake.writeMetadataMutex.Unlock()
 	fake.WriteMetadataStub = nil
 	fake.writeMetadataReturns = struct {
 		result1 error
@@ -291,8 +302,6 @@ func (fake *OCIDirectory) WriteMetadataReturns(result1 error) {
 }
 
 func (fake *OCIDirectory) WriteMetadataReturnsOnCall(i int, result1 error) {
-	fake.writeMetadataMutex.Lock()
-	defer fake.writeMetadataMutex.Unlock()
 	fake.WriteMetadataStub = nil
 	if fake.writeMetadataReturnsOnCall == nil {
 		fake.writeMetadataReturnsOnCall = make(map[int]struct {
@@ -309,6 +318,8 @@ func (fake *OCIDirectory) Invocations() map[string][][]interface{} {
 	defer fake.invocationsMutex.RUnlock()
 	fake.addBlobMutex.RLock()
 	defer fake.addBlobMutex.RUnlock()
+	fake.removeTopBlobMutex.RLock()
+	defer fake.removeTopBlobMutex.RUnlock()
 	fake.clearMetadataMutex.RLock()
 	defer fake.clearMetadataMutex.RUnlock()
 	fake.readMetadataMutex.RLock()
@@ -334,4 +345,4 @@ func (fake *OCIDirectory) recordInvocation(key string, args []interface{}) {
 	fake.invocations[key] = append(fake.invocations[key], args)
 }
 
-var _ layeradder.OCIDirectory = new(OCIDirectory)
+var _ layermodifier.OCIDirectory = new(OCIDirectory)

@@ -48,6 +48,23 @@ func (h *Handler) AddBlob(srcBlobPath string, blobDescriptor oci.Descriptor) err
 	return err
 }
 
+func (h *Handler) RemoveTopBlob(sha256 string) error {
+	if _, err := os.Stat(h.blobsDir()); err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%s is not a valid OCI image: %s directory missing", h.ociImageDir, h.blobsDir())
+		}
+		return err
+	}
+
+	if err := os.Remove(h.blobsPath(sha256)); err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%s does not contain layer: %s", h.ociImageDir, sha256)
+		}
+		return err
+	}
+	return nil
+}
+
 func (h *Handler) ClearMetadata() error {
 	filesToDelete := []string{h.ociLayoutPath(), h.indexPath()}
 
