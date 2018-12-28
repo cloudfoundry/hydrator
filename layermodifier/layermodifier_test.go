@@ -102,7 +102,7 @@ var _ = Describe("LayerModifier", func() {
 				Expect(fakeOCIDirectory.ClearMetadataCallCount()).To(Equal(1))
 
 				Expect(fakeOCIDirectory.WriteMetadataCallCount()).To(Equal(1))
-				newLayers, newDiffIDs := fakeOCIDirectory.WriteMetadataArgsForCall(0)
+				newLayers, newDiffIDs, _ := fakeOCIDirectory.WriteMetadataArgsForCall(0)
 
 				expectedLayers := []oci.Descriptor{
 					{Digest: "sha256:layer1", Size: 1234, MediaType: oci.MediaTypeImageLayerGzip},
@@ -204,7 +204,7 @@ var _ = Describe("LayerModifier", func() {
 			Expect(p).To(Equal("layer2"))
 
 			Expect(fakeOCIDirectory.WriteMetadataCallCount()).To(Equal(1))
-			newLayers, newDiffIDs := fakeOCIDirectory.WriteMetadataArgsForCall(0)
+			newLayers, newDiffIDs, _ := fakeOCIDirectory.WriteMetadataArgsForCall(0)
 
 			expectedLayers := []oci.Descriptor{
 				{Digest: "sha256:layer1", Size: 1234, MediaType: oci.MediaTypeImageLayerGzip},

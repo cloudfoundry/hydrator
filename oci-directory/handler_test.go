@@ -153,7 +153,7 @@ var _ = Describe("Handler", func() {
 			}
 
 			h = directory.NewHandler(ociImageDir)
-			Expect(h.WriteMetadata(layers, diffIds)).To(Succeed())
+			Expect(h.WriteMetadata(layers, diffIds, false)).To(Succeed())
 		})
 
 		AfterEach(func() {

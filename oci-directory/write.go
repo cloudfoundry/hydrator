@@ -12,7 +12,7 @@ import (
 	oci "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
-func (h *Handler) WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest) error {
+func (h *Handler) WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest, layerAdded bool) error {
 	if err := h.writeOCILayout(); err != nil {
 		return err
 	}
@@ -22,7 +22,13 @@ func (h *Handler) WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest
 		return err
 	}
 
-	manifestDescriptor, err := h.writeManifest(layers, configDescriptor)
+	annotations := make(map[string]string)
+	/* Mark that the top layer was added using hydrator */
+	if layerAdded == true {
+		annotations["hydrator.layerAdded"] = "true"
+	}
+
+	manifestDescriptor, err := h.writeManifest(layers, configDescriptor, annotations)
 	if err != nil {
 		return err
 	}
@@ -58,11 +64,12 @@ func (h *Handler) writeConfig(diffIds []digest.Digest) (oci.Descriptor, error) {
 	return d, nil
 }
 
-func (h *Handler) writeManifest(layers []oci.Descriptor, config oci.Descriptor) (oci.Descriptor, error) {
+func (h *Handler) writeManifest(layers []oci.Descriptor, config oci.Descriptor, annotations map[string]string) (oci.Descriptor, error) {
 	im := oci.Manifest{
-		Versioned: specs.Versioned{SchemaVersion: 2},
-		Config:    config,
-		Layers:    layers,
+		Versioned:   specs.Versioned{SchemaVersion: 2},
+		Config:      config,
+		Layers:      layers,
+		Annotations: annotations,
 	}
 
 	d, err := h.writeBlob(im)

@@ -55,11 +55,12 @@ type OCIDirectory struct {
 		result2 oci.Image
 		result3 error
 	}
-	WriteMetadataStub        func(layers []oci.Descriptor, diffIds []digest.Digest) error
+	WriteMetadataStub        func(layers []oci.Descriptor, diffIds []digest.Digest, layerAdded bool) error
 	writeMetadataMutex       sync.RWMutex
 	writeMetadataArgsForCall []struct {
-		layers  []oci.Descriptor
-		diffIds []digest.Digest
+		layers     []oci.Descriptor
+		diffIds    []digest.Digest
+		layerAdded bool
 	}
 	writeMetadataReturns struct {
 		result1 error
@@ -254,7 +255,7 @@ func (fake *OCIDirectory) ReadMetadataReturnsOnCall(i int, result1 oci.Manifest,
 	}{result1, result2, result3}
 }
 
-func (fake *OCIDirectory) WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest) error {
+func (fake *OCIDirectory) WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest, layerAdded bool) error {
 	var layersCopy []oci.Descriptor
 	if layers != nil {
 		layersCopy = make([]oci.Descriptor, len(layers))
@@ -268,13 +269,14 @@ func (fake *OCIDirectory) WriteMetadata(layers []oci.Descriptor, diffIds []diges
 	fake.writeMetadataMutex.Lock()
 	ret, specificReturn := fake.writeMetadataReturnsOnCall[len(fake.writeMetadataArgsForCall)]
 	fake.writeMetadataArgsForCall = append(fake.writeMetadataArgsForCall, struct {
-		layers  []oci.Descriptor
-		diffIds []digest.Digest
-	}{layersCopy, diffIdsCopy})
-	fake.recordInvocation("WriteMetadata", []interface{}{layersCopy, diffIdsCopy})
+		layers     []oci.Descriptor
+		diffIds    []digest.Digest
+		layerAdded bool
+	}{layersCopy, diffIdsCopy, layerAdded})
+	fake.recordInvocation("WriteMetadata", []interface{}{layersCopy, diffIdsCopy, layerAdded})
 	fake.writeMetadataMutex.Unlock()
 	if fake.WriteMetadataStub != nil {
-		return fake.WriteMetadataStub(layers, diffIds)
+		return fake.WriteMetadataStub(layers, diffIds, layerAdded)
 	}
 	if specificReturn {
 		return ret.result1
@@ -288,10 +290,11 @@ func (fake *OCIDirectory) WriteMetadataCallCount() int {
 	return len(fake.writeMetadataArgsForCall)
 }
 
-func (fake *OCIDirectory) WriteMetadataArgsForCall(i int) ([]oci.Descriptor, []digest.Digest) {
+func (fake *OCIDirectory) WriteMetadataArgsForCall(i int) ([]oci.Descriptor, []digest.Digest, bool) {
 	fake.writeMetadataMutex.RLock()
 	defer fake.writeMetadataMutex.RUnlock()
-	return fake.writeMetadataArgsForCall[i].layers, fake.writeMetadataArgsForCall[i].diffIds
+	return fake.writeMetadataArgsForCall[i].layers, fake.writeMetadataArgsForCall[i].diffIds, fake.writeMetadataArgsForCall[i].layerAdded
+
 }
 
 func (fake *OCIDirectory) WriteMetadataReturns(result1 error) {

@@ -66,7 +66,7 @@ func (i *ImageFetcher) Run() error {
 	}
 
 	handler := directory.NewHandler(imageDownloadDir)
-	if err := handler.WriteMetadata(layers, diffIds); err != nil {
+	if err := handler.WriteMetadata(layers, diffIds, false); err != nil {
 		return err
 	}
 	i.logger.Printf("\nAll layers downloaded.\n")

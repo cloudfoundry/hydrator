@@ -18,7 +18,7 @@ type OCIDirectory interface {
 	RemoveTopBlob(sha256 string) error
 	ClearMetadata() error
 	ReadMetadata() (oci.Manifest, oci.Image, error)
-	WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest) error
+	WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest, layerAdded bool) error
 }
 
 type LayerModifier struct {
@@ -52,7 +52,8 @@ func (l *LayerModifier) AddLayer(layerTgzPath string) error {
 
 	newLayers := append(manifest.Layers, descriptor)
 	newDiffIDs := append(config.RootFS.DiffIDs, diffId)
-	return l.ociDirectory.WriteMetadata(newLayers, newDiffIDs)
+	layerAdded := true
+	return l.ociDirectory.WriteMetadata(newLayers, newDiffIDs, layerAdded)
 }
 
 func (l *LayerModifier) RemoveTopLayer() error {
@@ -77,7 +78,8 @@ func (l *LayerModifier) RemoveTopLayer() error {
 
 	newLayers := manifest.Layers[:len(manifest.Layers)-1]
 	newDiffIDs := config.RootFS.DiffIDs[:len(config.RootFS.DiffIDs)-1]
-	return l.ociDirectory.WriteMetadata(newLayers, newDiffIDs)
+	layerAdded := false
+	return l.ociDirectory.WriteMetadata(newLayers, newDiffIDs, layerAdded)
 }
 
 func (l *LayerModifier) getLayerDescriptor(layerTgzPath string) (oci.Descriptor, digest.Digest, error) {

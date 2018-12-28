@@ -45,7 +45,7 @@ var _ = Describe("WriteMetadata", func() {
 	})
 
 	It("writes a valid oci layout file", func() {
-		Expect(h.WriteMetadata(layers, diffIds)).To(Succeed())
+		Expect(h.WriteMetadata(layers, diffIds, false)).To(Succeed())
 
 		var il oci.ImageLayout
 		content, err := ioutil.ReadFile(filepath.Join(outDir, "oci-layout"))
@@ -55,7 +55,7 @@ var _ = Describe("WriteMetadata", func() {
 	})
 
 	It("writes a valid index.json file", func() {
-		Expect(h.WriteMetadata(layers, diffIds)).To(Succeed())
+		Expect(h.WriteMetadata(layers, diffIds, false)).To(Succeed())
 
 		ii := loadIndex(outDir)
 		Expect(ii.SchemaVersion).To(Equal(2))
@@ -78,7 +78,7 @@ var _ = Describe("WriteMetadata", func() {
 	})
 
 	It("writes a valid manifest file, generating an image config", func() {
-		Expect(h.WriteMetadata(layers, diffIds)).To(Succeed())
+		Expect(h.WriteMetadata(layers, diffIds, false)).To(Succeed())
 
 		im := loadManifest(outDir)
 
@@ -93,7 +93,7 @@ var _ = Describe("WriteMetadata", func() {
 	})
 
 	It("writes a valid image config file", func() {
-		Expect(h.WriteMetadata(layers, diffIds)).To(Succeed())
+		Expect(h.WriteMetadata(layers, diffIds, false)).To(Succeed())
 
 		ic := loadConfig(outDir)
 
@@ -102,6 +102,26 @@ var _ = Describe("WriteMetadata", func() {
 		expectedRootFS := oci.RootFS{Type: "layers", DiffIDs: diffIds}
 		Expect(ic.RootFS).To(Equal(expectedRootFS))
 	})
+
+	Context("When doing the add-layer", func() {
+		It("writes a valid manifest file with hydrator add-layer annotations", func() {
+			Expect(h.WriteMetadata(layers, diffIds, true)).To(Succeed())
+
+			im := loadManifest(outDir)
+
+			Expect(im.Layers).To(ConsistOf(layers))
+			Expect(im.SchemaVersion).To(Equal(2))
+			Expect(im.Annotations).To(HaveKey("hydrator.layerAdded"))
+			Expect(im.Annotations["hydrator.layerAdded"]).To(Equal("true"))
+
+			configFile := filepath.Join(outDir, "blobs", im.Config.Digest.Algorithm().String(), im.Config.Digest.Encoded())
+			fi, err := os.Stat(configFile)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(fi.Size()).To(Equal(im.Config.Size))
+			Expect(sha256Sum(configFile)).To(Equal(im.Config.Digest.Encoded()))
+		})
+	})
+
 })
 
 func loadIndex(outDir string) oci.Index {
