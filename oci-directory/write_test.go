@@ -19,10 +19,11 @@ import (
 
 var _ = Describe("WriteMetadata", func() {
 	var (
-		h       *directory.Handler
-		layers  []oci.Descriptor
-		diffIds []digest.Digest
-		outDir  string
+		h          *directory.Handler
+		layers     []oci.Descriptor
+		diffIds    []digest.Digest
+		layerAdded bool
+		outDir     string
 	)
 
 	BeforeEach(func() {
@@ -37,6 +38,8 @@ var _ = Describe("WriteMetadata", func() {
 
 		diffIds = []digest.Digest{digest.NewDigestFromEncoded(digest.SHA256, "aaaaaa"), digest.NewDigestFromEncoded(digest.SHA256, "bbbbbb")}
 
+		layerAdded = false
+
 		h = directory.NewHandler(outDir)
 	})
 
@@ -45,7 +48,7 @@ var _ = Describe("WriteMetadata", func() {
 	})
 
 	It("writes a valid oci layout file", func() {
-		Expect(h.WriteMetadata(layers, diffIds, false)).To(Succeed())
+		Expect(h.WriteMetadata(layers, diffIds, layerAdded)).To(Succeed())
 
 		var il oci.ImageLayout
 		content, err := ioutil.ReadFile(filepath.Join(outDir, "oci-layout"))
@@ -55,7 +58,7 @@ var _ = Describe("WriteMetadata", func() {
 	})
 
 	It("writes a valid index.json file", func() {
-		Expect(h.WriteMetadata(layers, diffIds, false)).To(Succeed())
+		Expect(h.WriteMetadata(layers, diffIds, layerAdded)).To(Succeed())
 
 		ii := loadIndex(outDir)
 		Expect(ii.SchemaVersion).To(Equal(2))
@@ -77,42 +80,32 @@ var _ = Describe("WriteMetadata", func() {
 		Expect(sha256Sum(manifestFile)).To(Equal(manifestSha))
 	})
 
-	It("writes a valid manifest file, generating an image config", func() {
-		Expect(h.WriteMetadata(layers, diffIds, false)).To(Succeed())
-
-		im := loadManifest(outDir)
-
-		Expect(im.Layers).To(ConsistOf(layers))
-		Expect(im.SchemaVersion).To(Equal(2))
-
-		configFile := filepath.Join(outDir, "blobs", im.Config.Digest.Algorithm().String(), im.Config.Digest.Encoded())
-		fi, err := os.Stat(configFile)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(fi.Size()).To(Equal(im.Config.Size))
-		Expect(sha256Sum(configFile)).To(Equal(im.Config.Digest.Encoded()))
-	})
-
-	It("writes a valid image config file", func() {
-		Expect(h.WriteMetadata(layers, diffIds, false)).To(Succeed())
-
-		ic := loadConfig(outDir)
-
-		Expect(ic.Architecture).To(Equal("amd64"))
-		Expect(ic.OS).To(Equal("windows"))
-		expectedRootFS := oci.RootFS{Type: "layers", DiffIDs: diffIds}
-		Expect(ic.RootFS).To(Equal(expectedRootFS))
-	})
-
-	Context("When doing the add-layer", func() {
-		It("writes a valid manifest file with hydrator add-layer annotations", func() {
-			Expect(h.WriteMetadata(layers, diffIds, true)).To(Succeed())
+	Context("When writing a valid manifest file", func() {
+		It("generates an image config and sets the layerAdded annotation to false", func() {
+			Expect(h.WriteMetadata(layers, diffIds, layerAdded)).To(Succeed())
 
 			im := loadManifest(outDir)
 
 			Expect(im.Layers).To(ConsistOf(layers))
 			Expect(im.SchemaVersion).To(Equal(2))
-			Expect(im.Annotations).To(HaveKey("hydrator.layerAdded"))
-			Expect(im.Annotations["hydrator.layerAdded"]).To(Equal("true"))
+			Expect(im.Annotations).NotTo(HaveKey("hydrator.layerAdded"))
+
+			configFile := filepath.Join(outDir, "blobs", im.Config.Digest.Algorithm().String(), im.Config.Digest.Encoded())
+			fi, err := os.Stat(configFile)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(fi.Size()).To(Equal(im.Config.Size))
+			Expect(sha256Sum(configFile)).To(Equal(im.Config.Digest.Encoded()))
+		})
+
+		It("generates an image config and sets the layerAdded annotation to true", func() {
+			layerAdded = true
+			Expect(h.WriteMetadata(layers, diffIds, layerAdded)).To(Succeed())
+
+			im := loadManifest(outDir)
+
+			Expect(im.Layers).To(ConsistOf(layers))
+			Expect(im.SchemaVersion).To(Equal(2))
+			Expect(im.Annotations).To(HaveKeyWithValue("hydrator.layerAdded", "true"))
 
 			configFile := filepath.Join(outDir, "blobs", im.Config.Digest.Algorithm().String(), im.Config.Digest.Encoded())
 			fi, err := os.Stat(configFile)
@@ -122,6 +115,16 @@ var _ = Describe("WriteMetadata", func() {
 		})
 	})
 
+	It("writes a valid image config file", func() {
+		Expect(h.WriteMetadata(layers, diffIds, layerAdded)).To(Succeed())
+
+		ic := loadConfig(outDir)
+
+		Expect(ic.Architecture).To(Equal("amd64"))
+		Expect(ic.OS).To(Equal("windows"))
+		expectedRootFS := oci.RootFS{Type: "layers", DiffIDs: diffIds}
+		Expect(ic.RootFS).To(Equal(expectedRootFS))
+	})
 })
 
 func loadIndex(outDir string) oci.Index {

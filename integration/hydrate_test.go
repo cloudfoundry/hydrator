@@ -92,6 +92,9 @@ var _ = Describe("Hydrate", func() {
 
 					_, _, err := helpers.ExecInContainer(verificationContainerId, []string{"cmd.exe", "/c", "type C:\\hello.txt"}, false)
 					Expect(err).NotTo(Succeed())
+
+					im := loadManifest(testOciImagePath)
+					Expect(im.Annotations).NotTo(HaveKey("hydrator.layerAdded"))
 				})
 			})
 
@@ -207,6 +210,9 @@ var _ = Describe("Hydrate", func() {
 					Expect(err).To(Succeed())
 
 					Expect(stdOut.String()).To(ContainSubstring("hi"))
+
+					im := loadManifest(testOciImagePath)
+					Expect(im.Annotations).To(HaveKeyWithValue("hydrator.layerAdded", "true"))
 				})
 			})
 
@@ -337,6 +343,8 @@ var _ = Describe("Hydrate", func() {
 					Expect(il.Version).To(Equal(specs.Version))
 
 					im := loadManifest(imageContentsDir)
+					Expect(im.Annotations).NotTo(HaveKey("hydrator.layerAdded"))
+
 					ic := loadConfig(imageContentsDir)
 
 					for i, layer := range im.Layers {
@@ -387,6 +395,8 @@ var _ = Describe("Hydrate", func() {
 						Expect(il.Version).To(Equal(specs.Version))
 
 						im := loadManifest(outputDir)
+						Expect(im.Annotations).NotTo(HaveKey("hydrator.layerAdded"))
+
 						ic := loadConfig(outputDir)
 
 						for i, layer := range im.Layers {
