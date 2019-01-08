@@ -31,7 +31,11 @@ Use `hydrate --help` to show detailed usage.
 To run the entire suite of tests, do `ginkgo -r .`.
 
 The tests require the following env variables to be set:
-`GROOT_BINARY`
-`GROOT_IMAGE_STORE`
-`WINC_BINARY`
-`DIFF_EXPORTER_BINARY`
+
+* `GROOT_BINARY`
+
+* `GROOT_IMAGE_STORE`
+
+* `WINC_BINARY`
+
+* `DIFF_EXPORTER_BINARY`
