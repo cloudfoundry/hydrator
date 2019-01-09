@@ -22,16 +22,21 @@ var _ = Describe("LayerModifier", func() {
 	var (
 		layerModifier    *layermodifier.LayerModifier
 		fakeOCIDirectory *fakes.OCIDirectory
+		manifest         oci.Manifest
+		ociImageConfig   oci.Image
 	)
 
 	BeforeEach(func() {
-		manifest := oci.Manifest{
+		manifest = oci.Manifest{
 			Layers: []oci.Descriptor{
 				{Digest: "sha256:layer1", Size: 1234, MediaType: oci.MediaTypeImageLayerGzip},
 				{Digest: "sha256:layer2", Size: 6789, MediaType: oci.MediaTypeImageLayerGzip},
 			},
+			Annotations: map[string]string{
+				"hydrator.layerAdded": "true",
+			},
 		}
-		config := oci.Image{
+		ociImageConfig = oci.Image{
 			RootFS: oci.RootFS{
 				DiffIDs: []digest.Digest{
 					digest.NewDigestFromEncoded(digest.SHA256, "abcd"),
@@ -41,7 +46,7 @@ var _ = Describe("LayerModifier", func() {
 		}
 
 		fakeOCIDirectory = &fakes.OCIDirectory{}
-		fakeOCIDirectory.ReadMetadataReturns(manifest, config, nil)
+		fakeOCIDirectory.ReadMetadataReturns(manifest, ociImageConfig, nil)
 		layerModifier = layermodifier.New(fakeOCIDirectory)
 	})
 
@@ -191,10 +196,10 @@ var _ = Describe("LayerModifier", func() {
 		})
 	})
 
-	Describe("RemoveTopLayer", func() {
+	Describe("RemoveHydratorLayer", func() {
 
-		It("removes the top layer, and updates the OCI image metadata to not contain the top layer", func() {
-			Expect(layerModifier.RemoveTopLayer()).To(Succeed())
+		It("removes the layer that was added by hydrator, and updates the OCI image metadata to not contain the hydrator layer", func() {
+			Expect(layerModifier.RemoveHydratorLayer()).To(Succeed())
 
 			Expect(fakeOCIDirectory.ReadMetadataCallCount()).To(Equal(1))
 
@@ -220,13 +225,34 @@ var _ = Describe("LayerModifier", func() {
 			Expect(layerAdded).To(BeFalse())
 		})
 
+		Context("No layer was added previously", func() {
+			BeforeEach(func() {
+				manifest = oci.Manifest{
+					Layers: []oci.Descriptor{
+						{Digest: "sha256:layer1", Size: 1234, MediaType: oci.MediaTypeImageLayerGzip},
+						{Digest: "sha256:layer2", Size: 6789, MediaType: oci.MediaTypeImageLayerGzip},
+					},
+					Annotations: map[string]string{},
+				}
+				fakeOCIDirectory.ReadMetadataReturns(manifest, ociImageConfig, nil)
+			})
+
+			It("leaves the image unchanged", func() {
+				Expect(layerModifier.RemoveHydratorLayer()).To(Succeed())
+
+				Expect(fakeOCIDirectory.ReadMetadataCallCount()).To(Equal(1))
+				Expect(fakeOCIDirectory.ClearMetadataCallCount()).To(Equal(0))
+				Expect(fakeOCIDirectory.WriteMetadataCallCount()).To(Equal(0))
+			})
+		})
+
 		Context("Removing the blob fails", func() {
 			BeforeEach(func() {
 				fakeOCIDirectory.RemoveTopBlobReturns(errors.New("failed to remove blob"))
 			})
 
 			It("returns the error", func() {
-				Expect(layerModifier.RemoveTopLayer()).To(MatchError("failed to remove blob"))
+				Expect(layerModifier.RemoveHydratorLayer()).To(MatchError("failed to remove blob"))
 
 				Expect(fakeOCIDirectory.ReadMetadataCallCount()).To(Equal(1))
 				Expect(fakeOCIDirectory.ClearMetadataCallCount()).To(Equal(1))
@@ -240,7 +266,7 @@ var _ = Describe("LayerModifier", func() {
 			})
 
 			It("returns the error", func() {
-				Expect(layerModifier.RemoveTopLayer()).To(MatchError("failed to read metadata"))
+				Expect(layerModifier.RemoveHydratorLayer()).To(MatchError("failed to read metadata"))
 
 				Expect(fakeOCIDirectory.ClearMetadataCallCount()).To(Equal(0))
 				Expect(fakeOCIDirectory.WriteMetadataCallCount()).To(Equal(0))
@@ -253,7 +279,7 @@ var _ = Describe("LayerModifier", func() {
 			})
 
 			It("returns the error", func() {
-				Expect(layerModifier.RemoveTopLayer()).To(MatchError("failed to clear metadata"))
+				Expect(layerModifier.RemoveHydratorLayer()).To(MatchError("failed to clear metadata"))
 
 				Expect(fakeOCIDirectory.ReadMetadataCallCount()).To(Equal(1))
 				Expect(fakeOCIDirectory.WriteMetadataCallCount()).To(Equal(0))
@@ -266,25 +292,9 @@ var _ = Describe("LayerModifier", func() {
 			})
 
 			It("returns the error", func() {
-				Expect(layerModifier.RemoveTopLayer()).To(MatchError("failed to write metadata"))
+				Expect(layerModifier.RemoveHydratorLayer()).To(MatchError("failed to write metadata"))
 				Expect(fakeOCIDirectory.ReadMetadataCallCount()).To(Equal(1))
 				Expect(fakeOCIDirectory.ClearMetadataCallCount()).To(Equal(1))
-			})
-		})
-
-		Context("Remove layer when no layers exist", func() {
-			BeforeEach(func() {
-				fakeOCIDirectory = &fakes.OCIDirectory{}
-				fakeOCIDirectory.ReadMetadataReturns(oci.Manifest{}, oci.Image{}, nil)
-				layerModifier = layermodifier.New(fakeOCIDirectory)
-			})
-
-			It("returns an error", func() {
-				Expect(layerModifier.RemoveTopLayer()).To(MatchError("the oci image doesn't contain any layers"))
-
-				Expect(fakeOCIDirectory.ReadMetadataCallCount()).To(Equal(1))
-				Expect(fakeOCIDirectory.ClearMetadataCallCount()).To(Equal(1))
-				Expect(fakeOCIDirectory.WriteMetadataCallCount()).To(Equal(0))
 			})
 		})
 	})

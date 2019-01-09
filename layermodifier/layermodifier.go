@@ -1,7 +1,6 @@
 package layermodifier
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -56,18 +55,18 @@ func (l *LayerModifier) AddLayer(layerTgzPath string) error {
 	return l.ociDirectory.WriteMetadata(newLayers, newDiffIDs, layerAdded)
 }
 
-func (l *LayerModifier) RemoveTopLayer() error {
+func (l *LayerModifier) RemoveHydratorLayer() error {
 	manifest, config, err := l.ociDirectory.ReadMetadata()
 	if err != nil {
 		return err
 	}
 
-	if err := l.ociDirectory.ClearMetadata(); err != nil {
-		return err
+	if _, ok := manifest.Annotations["hydrator.layerAdded"]; !ok {
+		return nil
 	}
 
-	if len(manifest.Layers) == 0 {
-		return errors.New("the oci image doesn't contain any layers")
+	if err := l.ociDirectory.ClearMetadata(); err != nil {
+		return err
 	}
 
 	lastLayer := manifest.Layers[len(manifest.Layers)-1]
@@ -79,6 +78,7 @@ func (l *LayerModifier) RemoveTopLayer() error {
 	newLayers := manifest.Layers[:len(manifest.Layers)-1]
 	newDiffIDs := config.RootFS.DiffIDs[:len(config.RootFS.DiffIDs)-1]
 	layerAdded := false
+
 	return l.ociDirectory.WriteMetadata(newLayers, newDiffIDs, layerAdded)
 }
 
