@@ -10,8 +10,9 @@ import (
 
 var removeLayerCommand = cli.Command{
 	Name:  "remove-layer",
-	Usage: "removes the top layer from an existing image",
-	Description: `The remove-layer command removes the top layer from an existing OCI image.
+	Usage: "removes the top layer from an existing image if it was added by hydrator",
+	Description: `The remove-layer command removes the top layer from an existing OCI image
+	if that layer was added by hydrator.
 	Note that the OCI image must exist on disk and that the image will be modified
 	in place`,
 	Flags: []cli.Flag{
@@ -33,6 +34,6 @@ var removeLayerCommand = cli.Command{
 
 		ociDirectory := directory.NewHandler(ociImagePath)
 		layerModifier := layermodifier.New(ociDirectory)
-		return layerModifier.RemoveTopLayer()
+		return layerModifier.RemoveHydratorLayer()
 	},
 }
