@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	digest "github.com/opencontainers/go-digest"
 	oci "github.com/opencontainers/image-spec/specs-go/v1"
@@ -16,7 +17,8 @@ type Handler struct {
 
 func NewHandler(oid string) *Handler {
 	return &Handler{
-		ociImageDir: oid,
+		/* handle both oci directory path and oci:///<directory-path> */
+		ociImageDir: strings.TrimPrefix(oid, "oci:///"),
 	}
 }
 
