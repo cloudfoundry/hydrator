@@ -15,7 +15,13 @@ It generates a `hydrate.exe` in the current directory.
 ## Usage
 
 ```
-hydrate [global options] command [command options] [arguments...]
+hydrate.exe [global options] command [command options] [arguments...]
+```
+
+#### Example
+
+```
+hydrate.exe download -image cloudfoundry/windows2016fs -tag 1803 -outputDir C:\hydratorOutput -noTarball
 ```
 
 Use `hydrate --help` to show detailed usage.
