@@ -53,9 +53,6 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 			output, err := exec.Command("powershell", "-command", "[System.Environment]::OSVersion.Version.Build").CombinedOutput()
 			Expect(err).NotTo(HaveOccurred())
 
-			windowsBuild, err := strconv.Atoi(strings.TrimSpace(string(output)))
-			Expect(err).NotTo(HaveOccurred())
-
 			imageName, present := os.LookupEnv("IMAGE_NAME")
 			Expect(present).To(BeTrue(), "IMAGE_NAME not set")
 
