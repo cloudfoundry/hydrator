@@ -42,6 +42,8 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 	if runtime.GOOS == "windows" {
 		beforeSuiteOciImagePath, keep = os.LookupEnv("OCI_IMAGE_PATH")
 
+		var present bool
+
 		if !keep {
 			var err error
 			beforeSuiteOciImagePath, err = ioutil.TempDir("", "oci-image-path")
@@ -54,17 +56,15 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 			windowsBuild, err := strconv.Atoi(strings.TrimSpace(string(output)))
 			Expect(err).NotTo(HaveOccurred())
 
-			nanoserverTag := ""
-			if windowsBuild == 16299 {
-				nanoserverTag = "1709"
-			} else {
-				nanoserverTag = "1803"
-			}
+			imageName, present := os.LookupEnv("IMAGE_NAME")
+			Expect(present).To(BeTrue(), "IMAGE_NAME not set")
 
-			imagefetcher.New(logger, beforeSuiteOciImagePath, "microsoft/nanoserver", nanoserverTag, true).Run()
+			imageTag, present := os.LookupEnv("IMAGE_TAG")
+			Expect(present).To(BeTrue(), "IMAGE_TAG not set")
+
+			imagefetcher.New(logger, beforeSuiteOciImagePath, imageName, imageTag, true).Run()
 			Expect(err).ToNot(HaveOccurred())
 		}
-		var present bool
 
 		grootBin, present = os.LookupEnv("GROOT_BINARY")
 		Expect(present).To(BeTrue(), "GROOT_BINARY not set")
