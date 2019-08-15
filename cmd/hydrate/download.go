@@ -12,7 +12,7 @@ import (
 var downloadCommand = cli.Command{
 	Name:  "download",
 	Usage: "downloads an image",
-	Description: `The download command downloads an image from registry.hub.docker.com.
+	Description: `The download command downloads an image from specified registry.
 	The downloaded image is formatted according to the OCI Image Format Specification`,
 	Flags: []cli.Flag{
 		cli.StringFlag{
@@ -34,6 +34,16 @@ var downloadCommand = cli.Command{
 			Name:  "noTarball",
 			Usage: "Do not output image as a tarball",
 		},
+		cli.StringFlag{
+			Name:  "authServerURL",
+			Value: "https://auth.docker.io",
+			Usage: "Docker AuthServerURL to use",
+		},
+		cli.StringFlag{
+			Name:  "registryServerURL",
+			Value: "https://registry.hub.docker.com",
+			Usage: "Docker Registry URL to use",
+		},
 	},
 	Action: func(context *cli.Context) error {
 		if err := checkArgs(context, 0, exactArgs); err != nil {
@@ -46,7 +56,8 @@ var downloadCommand = cli.Command{
 		if imageName == "" {
 			return errors.New("ERROR: No image name provided")
 		}
-
-		return imagefetcher.New(logger, context.String("outputDir"), imageName, context.String("tag"), context.Bool("noTarball")).Run()
+		imageFetcher := imagefetcher.New(logger, context.String("outputDir"), imageName, context.String("tag"), context.Bool("noTarball"))
+		imageFetcher.SetCustomRegistry(context.String("authServerURL"), context.String("registryServerURL"))
+		return imageFetcher.Run()
 	},
 }

@@ -16,20 +16,33 @@ import (
 )
 
 type ImageFetcher struct {
-	logger    *log.Logger
-	outDir    string
-	imageName string
-	imageTag  string
-	noTarball bool
+	logger            *log.Logger
+	outDir            string
+	imageName         string
+	imageTag          string
+	noTarball         bool
+	authServerURL     string
+	registryServerURL string
 }
 
 func New(logger *log.Logger, outDir, imageName, imageTag string, noTarball bool) *ImageFetcher {
 	return &ImageFetcher{
-		logger:    logger,
-		outDir:    outDir,
-		imageName: imageName,
-		imageTag:  imageTag,
-		noTarball: noTarball,
+		logger:            logger,
+		outDir:            outDir,
+		imageName:         imageName,
+		imageTag:          imageTag,
+		noTarball:         noTarball,
+		authServerURL:     "https://auth.docker.io",
+		registryServerURL: "https://registry.hub.docker.com",
+	}
+}
+
+func (i *ImageFetcher) SetCustomRegistry(authServerURL, registryServerURL string) {
+	if len(authServerURL) > 0 {
+		i.authServerURL = authServerURL
+	}
+	if len(registryServerURL) > 0 {
+		i.registryServerURL = registryServerURL
 	}
 }
 
@@ -57,7 +70,7 @@ func (i *ImageFetcher) Run() error {
 		return err
 	}
 
-	r := registry.New("https://auth.docker.io", "https://registry.hub.docker.com", i.imageName, i.imageTag)
+	r := registry.New(i.authServerURL, i.registryServerURL, i.imageName, i.imageTag)
 	d := downloader.New(i.logger, blobDownloadDir, r)
 
 	layers, diffIds, err := d.Run()
