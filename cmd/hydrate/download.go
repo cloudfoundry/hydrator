@@ -47,6 +47,6 @@ var downloadCommand = cli.Command{
 			return errors.New("ERROR: No image name provided")
 		}
 
-		return imagefetcher.New(logger, context.String("outputDir"), imageName, context.String("tag"), context.Bool("noTarball")).Run()
+		return imagefetcher.New(logger, context.String("outputDir"), imageName, context.String("tag"), "", context.Bool("noTarball")).Run()
 	},
 }
