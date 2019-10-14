@@ -65,9 +65,10 @@ func (i *ImageFetcher) Run() error {
 	r := registry.New("https://auth.docker.io", i.registry, i.imageName, i.imageTag)
 	d := downloader.New(i.logger, blobDownloadDir, r)
 
+	i.logger.Printf("\nDownloading image: %s with tag: %s from registry: %s\n", i.imageName, i.imageTag, i.registry)
 	layers, diffIds, err := d.Run()
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed downloading image: %s with tag: %s from registry: %s - %s", i.imageName, i.imageTag, i.registry, err)
 	}
 
 	handler := directory.NewHandler(imageDownloadDir)
