@@ -55,7 +55,8 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 			imageTag, present := os.LookupEnv("IMAGE_TAG")
 			Expect(present).To(BeTrue(), "IMAGE_TAG not set")
 
-			imagefetcher.New(logger, beforeSuiteOciImagePath, imageName, imageTag, "", true).Run()
+			imagefetcher.New(logger, beforeSuiteOciImagePath, imageName, imageTag,
+				"", "", "", true).Run()
 			Expect(err).ToNot(HaveOccurred())
 		}
 

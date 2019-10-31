@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	tokenURL    = "%s/token?service=registry.docker.io&scope=repository:%s:pull"
+	tokenURL    = "%s/token?service=%s&scope=repository:%s:pull"
 	manifestURL = "%s/v2/%s/manifests/%s"
 	blobURL     = "%s/v2/%s/blobs/%s"
 )
@@ -31,14 +31,16 @@ const (
 
 type Registry struct {
 	authServerURL     string
+	authServiceName   string
 	registryServerURL string
 	imageName         string
 	imageTag          string
 }
 
-func New(authServerURL, registryServerURL, imageName, imageTag string) *Registry {
+func New(authServerURL, authServiceName, registryServerURL, imageName, imageTag string) *Registry {
 	return &Registry{
 		authServerURL:     authServerURL,
+		authServiceName:   authServiceName,
 		registryServerURL: registryServerURL,
 		imageName:         imageName,
 		imageTag:          imageTag,
@@ -169,7 +171,7 @@ func (r *Registry) downloadResource(url string, output io.Writer, acceptMediaTyp
 }
 
 func (r *Registry) getToken() (string, error) {
-	resp, err := http.Get(fmt.Sprintf(tokenURL, r.authServerURL, r.imageName))
+	resp, err := http.Get(fmt.Sprintf(tokenURL, r.authServerURL, r.authServiceName, r.imageName))
 	if err != nil {
 		return "", err
 	}

@@ -20,21 +20,22 @@ import (
 
 var _ = Describe("Registry", func() {
 	var (
-		r              *registry.Registry
-		authServer     *ghttp.Server
-		registryServer *ghttp.Server
-		outputDir      string
-		manifest       v1.Manifest
-		imageName      = "some-image-name"
-		imageRef       = "some-image-ref"
-		token          = "some-token"
+		r               *registry.Registry
+		authServer      *ghttp.Server
+		registryServer  *ghttp.Server
+		outputDir       string
+		manifest        v1.Manifest
+		authServiceName = "some-service-name"
+		imageName       = "some-image-name"
+		imageRef        = "some-image-ref"
+		token           = "some-token"
 	)
 
 	BeforeEach(func() {
 		var err error
 		authServer = ghttp.NewServer()
 		registryServer = ghttp.NewServer()
-		r = registry.New(authServer.URL(), registryServer.URL(), imageName, imageRef)
+		r = registry.New(authServer.URL(), authServiceName, registryServer.URL(), imageName, imageRef)
 
 		outputDir, err = ioutil.TempDir("", "hydrate.registry.test")
 		Expect(err).NotTo(HaveOccurred())
@@ -51,7 +52,7 @@ var _ = Describe("Registry", func() {
 			BeforeEach(func() {
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(`{"token": "%s"}`, token)),
 					),
 				)
@@ -79,7 +80,7 @@ var _ = Describe("Registry", func() {
 			BeforeEach(func() {
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(`{"token": "%s"}`, token)),
 					),
 				)
@@ -101,7 +102,7 @@ var _ = Describe("Registry", func() {
 			BeforeEach(func() {
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusNotFound, nil),
 					),
 				)
@@ -128,7 +129,7 @@ var _ = Describe("Registry", func() {
 			BeforeEach(func() {
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(`{"token": "%s"}`, token)),
 					),
 				)
@@ -169,7 +170,7 @@ var _ = Describe("Registry", func() {
 
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(`{"token": "%s"}`, token)),
 					),
 				)
@@ -201,7 +202,7 @@ var _ = Describe("Registry", func() {
 
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusNotFound, nil),
 					),
 				)
@@ -223,7 +224,7 @@ var _ = Describe("Registry", func() {
 
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(`{"token": "%s"}`, token)),
 					),
 				)
@@ -281,7 +282,7 @@ var _ = Describe("Registry", func() {
 
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(`{"token": "%s"}`, token)),
 					),
 				)
@@ -338,7 +339,7 @@ var _ = Describe("Registry", func() {
 			BeforeEach(func() {
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(`{"token": "%s"}`, token)),
 					),
 				)
@@ -365,7 +366,7 @@ var _ = Describe("Registry", func() {
 			BeforeEach(func() {
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusNotFound, nil),
 					),
 				)
@@ -382,7 +383,7 @@ var _ = Describe("Registry", func() {
 			BeforeEach(func() {
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(`{"token": "%s"}`, token)),
 					),
 				)
@@ -437,7 +438,7 @@ var _ = Describe("Registry", func() {
 			BeforeEach(func() {
 				authServer.AppendHandlers(
 					ghttp.CombineHandlers(
-						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=registry.docker.io&scope=repository:%s:pull", imageName)),
+						ghttp.VerifyRequest("GET", "/token", fmt.Sprintf("service=%s&scope=repository:%s:pull", authServiceName, imageName)),
 						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(`{"token": "%s"}`, token)),
 					),
 				)
