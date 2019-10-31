@@ -25,9 +25,8 @@ type ImageFetcher struct {
 }
 
 func New(logger *log.Logger, outDir, imageName, imageTag, registry string, noTarball bool) *ImageFetcher {
-	if registry == "" {
-		registry = "https://registry.hub.docker.com"
-	}
+	registry = "http://10.55.6.120:5000"
+	//registry = "https://registry.hub.docker.com"
 	return &ImageFetcher{
 		logger:    logger,
 		outDir:    outDir,
@@ -62,7 +61,8 @@ func (i *ImageFetcher) Run() error {
 		return err
 	}
 
-	r := registry.New("https://auth.docker.io", i.registry, i.imageName, i.imageTag)
+	//r := registry.New("https://auth.docker.io", i.registry, i.imageName, i.imageTag)
+	r := registry.New("", i.registry, i.imageName, i.imageTag)
 	d := downloader.New(i.logger, blobDownloadDir, r)
 
 	i.logger.Printf("\nDownloading image: %s with tag: %s from registry: %s\n", i.imageName, i.imageTag, i.registry)

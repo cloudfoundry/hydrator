@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -16,7 +15,7 @@ import (
 )
 
 const (
-	tokenURL    = "%s/token?service=registry.docker.io&scope=repository:%s:pull"
+	//	tokenURL    = "%s/token?service=registry.docker.io&scope=repository:%s:pull"
 	manifestURL = "%s/v2/%s/manifests/%s"
 	blobURL     = "%s/v2/%s/blobs/%s"
 )
@@ -139,17 +138,18 @@ func (r *Registry) blobURL(d digest.Digest) string {
 }
 
 func (r *Registry) downloadResource(url string, output io.Writer, acceptMediaTypes ...string) error {
-	token, err := r.getToken()
-	if err != nil {
-		return err
-	}
+	// token, err := r.getToken()
+	// if err != nil {
+	// 	return err
+	// }
 
+	fmt.Printf("%s\n", "downloading without any Auth tokens")
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
 	}
 
-	req.Header.Add("Authorization", "Bearer "+token)
+	// req.Header.Add("Authorization", "Bearer "+token)
 	for _, mediaType := range acceptMediaTypes {
 		req.Header.Add("Accept", mediaType)
 	}
@@ -168,32 +168,32 @@ func (r *Registry) downloadResource(url string, output io.Writer, acceptMediaTyp
 	return err
 }
 
-func (r *Registry) getToken() (string, error) {
-	resp, err := http.Get(fmt.Sprintf(tokenURL, r.authServerURL, r.imageName))
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return "", &HTTPNotOKError{statusCode: resp.StatusCode}
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-
-	var token struct {
-		Token string
-	}
-
-	if err := json.Unmarshal(body, &token); err != nil {
-		return "", err
-	}
-
-	return token.Token, nil
-}
+// func (r *Registry) getToken() (string, error) {
+// 	resp, err := http.Get(fmt.Sprintf(tokenURL, r.authServerURL, r.imageName))
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	defer resp.Body.Close()
+//
+// 	if resp.StatusCode != http.StatusOK {
+// 		return "", &HTTPNotOKError{statusCode: resp.StatusCode}
+// 	}
+//
+// 	body, err := ioutil.ReadAll(resp.Body)
+// 	if err != nil {
+// 		return "", err
+// 	}
+//
+// 	var token struct {
+// 		Token string
+// 	}
+//
+// 	if err := json.Unmarshal(body, &token); err != nil {
+// 		return "", err
+// 	}
+//
+// 	return token.Token, nil
+// }
 
 func checkSHA256(file, expected string) error {
 	f, err := os.Open(file)

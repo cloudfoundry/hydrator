@@ -43,9 +43,9 @@ func (d *Downloader) Run() ([]v1.Descriptor, []digest.Digest, error) {
 		return nil, nil, err
 	}
 
-	if registryConfig.OS != "windows" {
-		return nil, nil, fmt.Errorf("invalid container OS: %s", registryConfig.OS)
-	}
+	// if registryConfig.OS != "windows" {
+	// 	return nil, nil, fmt.Errorf("invalid container OS: %s", registryConfig.OS)
+	// }
 	if registryConfig.Architecture != "amd64" {
 		return nil, nil, fmt.Errorf("invalid container arch: %s", registryConfig.Architecture)
 	}
