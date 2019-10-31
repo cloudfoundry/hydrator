@@ -26,6 +26,26 @@ var downloadCommand = cli.Command{
 			Usage: "Name of the image to download",
 		},
 		cli.StringFlag{
+			Name:  "registryServer",
+			Value: "",
+			Usage: "Registry server url that stores docker images (defaults to dockerhub url)",
+		},
+		cli.StringFlag{
+			Name:  "authServer",
+			Value: "",
+			Usage: "Authorization server url (defaults to dockerhub url)",
+		},
+		cli.StringFlag{
+			Name:  "authServiceName",
+			Value: "",
+			Usage: "Name of the authorization service (defaults to docker service)",
+		},
+		// TODO implement this in imagefetcher
+		// cli.BoolFlag{
+		// 	Name:  "no-auth",
+		// 	Usage: "Do not use authorization to download",
+		// },
+		cli.StringFlag{
 			Name:  "tag",
 			Value: "latest",
 			Usage: "Image tag to download",
@@ -47,6 +67,14 @@ var downloadCommand = cli.Command{
 			return errors.New("ERROR: No image name provided")
 		}
 
-		return imagefetcher.New(logger, context.String("outputDir"), imageName, context.String("tag"), "", "", "", context.Bool("noTarball")).Run()
+		return imagefetcher.New(logger,
+			context.String("outputDir"),
+			imageName,
+			context.String("tag"),
+			context.String("registryServer"),
+			context.String("authServer"),
+			context.String("authServiceName"),
+			context.Bool("noTarball"),
+		).Run()
 	},
 }
