@@ -307,7 +307,7 @@ var _ = Describe("Hydrate", func() {
 			imageContentsDir, err = ioutil.TempDir("", "image-contents")
 			Expect(err).NotTo(HaveOccurred())
 
-			imageName = "pivotalgreenhouse/windows2016fs-hydrate"
+			imageName = "cloudfoundry/windows2016fs-hydrate-test"
 			imageTag = "1.0.0"
 			nameParts := strings.Split(imageName, "/")
 			Expect(len(nameParts)).To(Equal(2))
