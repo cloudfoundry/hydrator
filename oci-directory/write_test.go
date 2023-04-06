@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 
 	directory "code.cloudfoundry.org/hydrator/oci-directory"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	digest "github.com/opencontainers/go-digest"
 	specs "github.com/opencontainers/image-spec/specs-go"

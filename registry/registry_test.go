@@ -11,7 +11,7 @@ import (
 
 	"code.cloudfoundry.org/hydrator/registry"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 	digest "github.com/opencontainers/go-digest"
@@ -302,7 +302,7 @@ var _ = Describe("Registry", func() {
 			})
 		})
 
-		Describe("when authentication is required", func(){
+		Describe("when authentication is required", func() {
 			var (
 				layer     v1.Descriptor
 				layerData = "some-layer-data"

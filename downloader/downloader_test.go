@@ -9,7 +9,7 @@ import (
 	"code.cloudfoundry.org/hydrator/downloader"
 	"code.cloudfoundry.org/hydrator/downloader/fakes"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	digest "github.com/opencontainers/go-digest"
 	"github.com/opencontainers/image-spec/specs-go/v1"
