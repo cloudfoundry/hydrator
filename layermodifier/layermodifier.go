@@ -1,12 +1,13 @@
 package layermodifier
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
 	"github.com/google/go-containerregistry/pkg/v1/tarball"
-	"github.com/google/go-containerregistry/pkg/v1/v1util"
 	digest "github.com/opencontainers/go-digest"
 	oci "github.com/opencontainers/image-spec/specs-go/v1"
 )
@@ -89,7 +90,7 @@ func (l *LayerModifier) getLayerDescriptor(layerTgzPath string) (oci.Descriptor,
 	}
 	defer layerfd.Close()
 
-	compressed, err := v1util.IsGzipped(layerfd)
+	compressed, err := isGzipped(layerfd)
 	if err != nil {
 		return oci.Descriptor{}, "", err
 	}
@@ -119,4 +120,20 @@ func (l *LayerModifier) getLayerDescriptor(layerTgzPath string) (oci.Descriptor,
 		MediaType: oci.MediaTypeImageLayerGzip,
 		Size:      size,
 	}, digest.Digest(diffID.String()), nil
+}
+
+var gzipHeader = []byte{'\x1f', '\x8b'}
+
+func isGzipped(file *os.File) (bool, error) {
+	header := make([]byte, 2)
+	n, err := file.Read(header)
+	if n == 0 && err == io.EOF {
+		return false, nil
+	}
+
+	if err != nil {
+		return false, err
+	}
+
+	return bytes.Equal(header, gzipHeader), nil
 }
