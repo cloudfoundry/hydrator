@@ -2,8 +2,6 @@ module code.cloudfoundry.org/hydrator
 
 go 1.20
 
-replace github.com/opencontainers/image-spec => github.com/opencontainers/image-spec v1.1.0-rc2
-
 require (
 	code.cloudfoundry.org/archiver v0.0.0-20230406165347-48bf3e51e0c6
 	github.com/Microsoft/hcsshim v0.9.9
