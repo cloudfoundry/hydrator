@@ -49,9 +49,11 @@ var _ = Describe("ReadMetadata", func() {
 		}
 
 		config = oci.Image{
-			Architecture: "amd64",
-			OS:           "windows",
-			RootFS:       oci.RootFS{Type: "layers", DiffIDs: diffIds},
+			Platform: oci.Platform{
+				Architecture: "amd64",
+				OS:           "windows",
+			},
+			RootFS: oci.RootFS{Type: "layers", DiffIDs: diffIds},
 		}
 		cdesc := writeBlob(srcDir, config)
 		cdesc.MediaType = oci.MediaTypeImageConfig
@@ -394,9 +396,11 @@ func writeBlob(outDir string, blob interface{}) oci.Descriptor {
 
 func writeConfig(outDir string, diffIds []digest.Digest) oci.Descriptor {
 	ic := oci.Image{
-		Architecture: "amd64",
-		OS:           "windows",
-		RootFS:       oci.RootFS{Type: "layers", DiffIDs: diffIds},
+		Platform: oci.Platform{
+			Architecture: "amd64",
+			OS:           "windows",
+		},
+		RootFS: oci.RootFS{Type: "layers", DiffIDs: diffIds},
 	}
 
 	d := writeBlob(outDir, ic)

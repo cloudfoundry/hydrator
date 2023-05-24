@@ -12,7 +12,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	digest "github.com/opencontainers/go-digest"
-	"github.com/opencontainers/image-spec/specs-go/v1"
+	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
 var _ = Describe("Downloader", func() {
@@ -44,9 +44,11 @@ var _ = Describe("Downloader", func() {
 			digest.NewDigestFromEncoded(digest.SHA256, "bbbbbb"),
 		}
 		sourceConfig = v1.Image{
-			OS:           "windows",
-			Architecture: "amd64",
-			RootFS:       v1.RootFS{Type: "layers", DiffIDs: sourceDiffIds},
+			Platform: v1.Platform{
+				OS:           "windows",
+				Architecture: "amd64",
+			},
+			RootFS: v1.RootFS{Type: "layers", DiffIDs: sourceDiffIds},
 		}
 
 		registry = &fakes.Registry{}
@@ -145,9 +147,11 @@ var _ = Describe("Downloader", func() {
 				digest.NewDigestFromEncoded(digest.SHA256, "aaaaaa"),
 			}
 			sourceConfig = v1.Image{
-				OS:           "windows",
-				Architecture: "amd64",
-				RootFS:       v1.RootFS{Type: "layers", DiffIDs: sourceDiffIds},
+				Platform: v1.Platform{
+					OS:           "windows",
+					Architecture: "amd64",
+				},
+				RootFS: v1.RootFS{Type: "layers", DiffIDs: sourceDiffIds},
 			}
 
 			registry.ConfigReturnsOnCall(0, sourceConfig, nil)
@@ -163,7 +167,9 @@ var _ = Describe("Downloader", func() {
 	Context("config has invalid OS", func() {
 		BeforeEach(func() {
 			sourceConfig = v1.Image{
-				OS: "linux",
+				Platform: v1.Platform{
+					OS: "linux",
+				},
 			}
 
 			registry.ConfigReturnsOnCall(0, sourceConfig, nil)
@@ -179,8 +185,10 @@ var _ = Describe("Downloader", func() {
 	Context("config has invalid architecture", func() {
 		BeforeEach(func() {
 			sourceConfig = v1.Image{
-				OS:           "windows",
-				Architecture: "ppc64",
+				Platform: v1.Platform{
+					OS:           "windows",
+					Architecture: "ppc64",
+				},
 			}
 
 			registry.ConfigReturnsOnCall(0, sourceConfig, nil)
