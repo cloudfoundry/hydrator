@@ -17,7 +17,7 @@ require (
 require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/containerd/cgroups v1.1.0 // indirect
-	github.com/containerd/containerd v1.7.8 // indirect
+	github.com/containerd/containerd v1.7.9 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.15.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.3 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
