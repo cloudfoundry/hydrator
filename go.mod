@@ -3,14 +3,14 @@ module code.cloudfoundry.org/hydrator
 go 1.20
 
 require (
-	code.cloudfoundry.org/archiver v0.0.0-20231206170638-1923b319e771
+	code.cloudfoundry.org/archiver v0.0.0-20240209143848-e43eec6a484c
 	github.com/Microsoft/hcsshim v0.11.4
 	github.com/google/go-containerregistry v0.19.0
 	github.com/onsi/ginkgo/v2 v2.15.0
 	github.com/onsi/gomega v1.31.1
 	github.com/opencontainers/go-digest v1.0.0
-	github.com/opencontainers/image-spec v1.1.0-rc6
-	github.com/opencontainers/runtime-spec v1.1.0
+	github.com/opencontainers/image-spec v1.1.0
+	github.com/opencontainers/runtime-spec v1.2.0
 	github.com/urfave/cli v1.22.14
 )
 
@@ -40,9 +40,9 @@ require (
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	golang.org/x/tools v0.17.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240205150955-31a09d347014 // indirect
-	google.golang.org/grpc v1.61.0 // indirect
+	golang.org/x/tools v0.18.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240213162025-012b6fc9bca9 // indirect
+	google.golang.org/grpc v1.61.1 // indirect
 	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
