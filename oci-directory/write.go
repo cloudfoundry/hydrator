@@ -24,7 +24,7 @@ func (h *Handler) WriteMetadata(layers []oci.Descriptor, diffIds []digest.Digest
 
 	annotations := make(map[string]string)
 	/* Mark that the top layer was added using hydrator */
-	if layerAdded == true {
+	if layerAdded {
 		annotations["hydrator.layerAdded"] = "true"
 	}
 
