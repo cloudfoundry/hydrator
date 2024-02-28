@@ -213,7 +213,8 @@ func (h *Helpers) Execute(c *exec.Cmd) (*bytes.Buffer, *bytes.Buffer, error) {
 }
 
 func (h *Helpers) ExecCommand(command string, args ...string) *exec.Cmd {
-	allArgs := []string{}
+	var allArgs []string
+
 	if h.debug {
 		allArgs = append([]string{"--log", h.logFile.Name(), "--debug"}, args...)
 	} else {
