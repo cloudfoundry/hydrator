@@ -3,7 +3,6 @@ package registry_test
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -15,7 +14,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
 	digest "github.com/opencontainers/go-digest"
-	"github.com/opencontainers/image-spec/specs-go/v1"
+	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
 var _ = Describe("Registry", func() {
@@ -36,7 +35,7 @@ var _ = Describe("Registry", func() {
 		registryServer = ghttp.NewServer()
 		r = registry.New(registryServer.URL(), imageName, imageRef)
 
-		outputDir, err = ioutil.TempDir("", "hydrate.registry.test")
+		outputDir, err = os.MkdirTemp("", "hydrate.registry.test")
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -184,7 +183,7 @@ var _ = Describe("Registry", func() {
 				It("downloads a layer for the given image and blob digest", func() {
 					Expect(r.DownloadLayer(layer, outputDir)).To(Succeed())
 
-					data, err := ioutil.ReadFile(filepath.Join(outputDir, layerSHA))
+					data, err := os.ReadFile(filepath.Join(outputDir, layerSHA))
 					Expect(err).NotTo(HaveOccurred())
 					Expect(string(data)).To(Equal(layerData))
 				})
@@ -208,7 +207,7 @@ var _ = Describe("Registry", func() {
 				It("downloads a layer for the given image and blob digest", func() {
 					Expect(r.DownloadLayer(layer, outputDir)).To(Succeed())
 
-					data, err := ioutil.ReadFile(filepath.Join(outputDir, layerSHA))
+					data, err := os.ReadFile(filepath.Join(outputDir, layerSHA))
 					Expect(err).NotTo(HaveOccurred())
 					Expect(string(data)).To(Equal(layerData))
 				})
@@ -341,7 +340,7 @@ var _ = Describe("Registry", func() {
 				It("downloads a layer for the given image and blob digest", func() {
 					Expect(r.DownloadLayer(layer, outputDir)).To(Succeed())
 
-					data, err := ioutil.ReadFile(filepath.Join(outputDir, layerSHA))
+					data, err := os.ReadFile(filepath.Join(outputDir, layerSHA))
 					Expect(err).NotTo(HaveOccurred())
 					Expect(string(data)).To(Equal(layerData))
 				})

@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -59,7 +58,7 @@ var _ = Describe("Hydrate", func() {
 
 				BeforeEach(func() {
 					var err error
-					testOciImagePath, err = ioutil.TempDir("", "test-oci-image")
+					testOciImagePath, err = os.MkdirTemp("", "test-oci-image")
 					Expect(err).NotTo(HaveOccurred())
 
 					helpers.CopyOciImage(ociImagePath, testOciImagePath)
@@ -114,7 +113,7 @@ var _ = Describe("Hydrate", func() {
 
 				BeforeEach(func() {
 					var err error
-					invalidImagePath, err = ioutil.TempDir("", "invalid-image")
+					invalidImagePath, err = os.MkdirTemp("", "invalid-image")
 					Expect(err).NotTo(HaveOccurred())
 				})
 				AfterEach(func() {
@@ -171,7 +170,7 @@ var _ = Describe("Hydrate", func() {
 
 			BeforeEach(func() {
 				var err error
-				testOciImagePath, err = ioutil.TempDir("", "test-oci-image")
+				testOciImagePath, err = os.MkdirTemp("", "test-oci-image")
 				Expect(err).NotTo(HaveOccurred())
 
 				helpers.CopyOciImage(ociImagePath, testOciImagePath)
@@ -242,7 +241,7 @@ var _ = Describe("Hydrate", func() {
 				var invalidLayerPath string
 
 				BeforeEach(func() {
-					tempFile, err := ioutil.TempFile("", "invalid-layer")
+					tempFile, err := os.CreateTemp("", "invalid-layer")
 					Expect(err).NotTo(HaveOccurred())
 					defer tempFile.Close()
 
@@ -271,7 +270,7 @@ var _ = Describe("Hydrate", func() {
 
 				BeforeEach(func() {
 					var err error
-					invalidImagePath, err = ioutil.TempDir("", "invalid-image")
+					invalidImagePath, err = os.MkdirTemp("", "invalid-image")
 					Expect(err).NotTo(HaveOccurred())
 				})
 				AfterEach(func() {
@@ -301,10 +300,10 @@ var _ = Describe("Hydrate", func() {
 
 		BeforeEach(func() {
 			var err error
-			outputDir, err = ioutil.TempDir("", "hydrateOutput")
+			outputDir, err = os.MkdirTemp("", "hydrateOutput")
 			Expect(err).NotTo(HaveOccurred())
 
-			imageContentsDir, err = ioutil.TempDir("", "image-contents")
+			imageContentsDir, err = os.MkdirTemp("", "image-contents")
 			Expect(err).NotTo(HaveOccurred())
 
 			imageName = "cloudfoundry/windows2016fs-hydrate-test"
@@ -337,7 +336,7 @@ var _ = Describe("Hydrate", func() {
 					ociLayoutFile := filepath.Join(imageContentsDir, "oci-layout")
 
 					var il oci.ImageLayout
-					content, err := ioutil.ReadFile(ociLayoutFile)
+					content, err := os.ReadFile(ociLayoutFile)
 					Expect(err).NotTo(HaveOccurred())
 					Expect(json.Unmarshal(content, &il)).To(Succeed())
 					Expect(il.Version).To(Equal(specs.Version))
@@ -389,7 +388,7 @@ var _ = Describe("Hydrate", func() {
 						ociLayoutFile := filepath.Join(outputDir, "oci-layout")
 
 						var il oci.ImageLayout
-						content, err := ioutil.ReadFile(ociLayoutFile)
+						content, err := os.ReadFile(ociLayoutFile)
 						Expect(err).NotTo(HaveOccurred())
 						Expect(json.Unmarshal(content, &il)).To(Succeed())
 						Expect(il.Version).To(Equal(specs.Version))
@@ -534,7 +533,7 @@ func filename(dir string, desc oci.Descriptor) string {
 
 func loadIndex(outDir string) oci.Index {
 	var ii oci.Index
-	content, err := ioutil.ReadFile(filepath.Join(outDir, "index.json"))
+	content, err := os.ReadFile(filepath.Join(outDir, "index.json"))
 	Expect(err).NotTo(HaveOccurred())
 	Expect(json.Unmarshal(content, &ii)).To(Succeed())
 
@@ -544,7 +543,7 @@ func loadIndex(outDir string) oci.Index {
 func loadManifest(outDir string) oci.Manifest {
 	ii := loadIndex(outDir)
 
-	content, err := ioutil.ReadFile(filename(outDir, ii.Manifests[0]))
+	content, err := os.ReadFile(filename(outDir, ii.Manifests[0]))
 	Expect(err).NotTo(HaveOccurred())
 
 	var im oci.Manifest
@@ -555,7 +554,7 @@ func loadManifest(outDir string) oci.Manifest {
 func loadConfig(outDir string) oci.Image {
 	im := loadManifest(outDir)
 
-	content, err := ioutil.ReadFile(filename(outDir, im.Config))
+	content, err := os.ReadFile(filename(outDir, im.Config))
 	Expect(err).NotTo(HaveOccurred())
 
 	var ic oci.Image

@@ -4,7 +4,6 @@ import (
 	"compress/gzip"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"path/filepath"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -58,7 +57,7 @@ var _ = Describe("LayerModifier", func() {
 
 		BeforeEach(func() {
 			var err error
-			layerDir, err = ioutil.TempDir("", "layermodifier-layerdir")
+			layerDir, err = os.MkdirTemp("", "layermodifier-layerdir")
 			Expect(err).NotTo(HaveOccurred())
 			layerTgzPath = filepath.Join(layerDir, "my-new-layer.tgz")
 		})
@@ -178,7 +177,7 @@ var _ = Describe("LayerModifier", func() {
 
 		Context("the layer file is not gzipped", func() {
 			BeforeEach(func() {
-				Expect(ioutil.WriteFile(layerTgzPath, []byte("not gzipped data"), 0644)).To(Succeed())
+				Expect(os.WriteFile(layerTgzPath, []byte("not gzipped data"), 0644)).To(Succeed())
 			})
 
 			It("returns an error", func() {

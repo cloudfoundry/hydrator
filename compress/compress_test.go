@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -29,25 +28,25 @@ var _ = Describe("Compress", func() {
 
 		BeforeEach(func() {
 			var err error
-			srcDir, err = ioutil.TempDir("", "write-tgz.src")
+			srcDir, err = os.MkdirTemp("", "write-tgz.src")
 			Expect(err).NotTo(HaveOccurred())
 
-			outputDir, err = ioutil.TempDir("", "write-tgz.out")
+			outputDir, err = os.MkdirTemp("", "write-tgz.out")
 			Expect(err).NotTo(HaveOccurred())
 
 			outputFile = filepath.Join(outputDir, "image.tgz")
 
-			Expect(ioutil.WriteFile(filepath.Join(srcDir, "file1"), []byte("contents1"), 0644)).To(Succeed())
-			Expect(ioutil.WriteFile(filepath.Join(srcDir, "file2"), []byte("contents2"), 0644)).To(Succeed())
-			Expect(ioutil.WriteFile(filepath.Join(srcDir, "file3"), []byte("contents3"), 0644)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(srcDir, "file1"), []byte("contents1"), 0644)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(srcDir, "file2"), []byte("contents2"), 0644)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(srcDir, "file3"), []byte("contents3"), 0644)).To(Succeed())
 
 			subDir1 := filepath.Join(srcDir, "blobs", "sha1")
 			Expect(os.MkdirAll(subDir1, 0755)).To(Succeed())
-			Expect(ioutil.WriteFile(filepath.Join(subDir1, "file4"), []byte("contents4"), 0644)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(subDir1, "file4"), []byte("contents4"), 0644)).To(Succeed())
 
 			subDir2 := filepath.Join(srcDir, "blobs", "md5")
 			Expect(os.MkdirAll(subDir2, 0755)).To(Succeed())
-			Expect(ioutil.WriteFile(filepath.Join(subDir2, "file5"), []byte("contents5"), 0644)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(subDir2, "file5"), []byte("contents5"), 0644)).To(Succeed())
 
 			c = compress.New()
 		})
@@ -63,23 +62,23 @@ var _ = Describe("Compress", func() {
 			contents := extractTarball(outputFile)
 			defer os.RemoveAll(contents)
 
-			data, err := ioutil.ReadFile(filepath.Join(contents, "file1"))
+			data, err := os.ReadFile(filepath.Join(contents, "file1"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(string(data)).To(Equal("contents1"))
 
-			data, err = ioutil.ReadFile(filepath.Join(contents, "file2"))
+			data, err = os.ReadFile(filepath.Join(contents, "file2"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(string(data)).To(Equal("contents2"))
 
-			data, err = ioutil.ReadFile(filepath.Join(contents, "file3"))
+			data, err = os.ReadFile(filepath.Join(contents, "file3"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(string(data)).To(Equal("contents3"))
 
-			data, err = ioutil.ReadFile(filepath.Join(contents, "blobs", "sha1", "file4"))
+			data, err = os.ReadFile(filepath.Join(contents, "blobs", "sha1", "file4"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(string(data)).To(Equal("contents4"))
 
-			data, err = ioutil.ReadFile(filepath.Join(contents, "blobs", "md5", "file5"))
+			data, err = os.ReadFile(filepath.Join(contents, "blobs", "md5", "file5"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(string(data)).To(Equal("contents5"))
 
@@ -89,7 +88,7 @@ var _ = Describe("Compress", func() {
 })
 
 func extractTarball(path string) string {
-	tmpDir, err := ioutil.TempDir("", "hydrated")
+	tmpDir, err := os.MkdirTemp("", "hydrated")
 	Expect(err).NotTo(HaveOccurred())
 	err = extractor.NewTgz().Extract(path, tmpDir)
 	ExpectWithOffset(1, err).NotTo(HaveOccurred())

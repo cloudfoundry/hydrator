@@ -2,7 +2,6 @@ package hydrate_test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -45,7 +44,7 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 
 		if !keep {
 			var err error
-			beforeSuiteOciImagePath, err = ioutil.TempDir("", "oci-image-path")
+			beforeSuiteOciImagePath, err = os.MkdirTemp("", "oci-image-path")
 
 			logger := log.New(os.Stdout, "", 0)
 
