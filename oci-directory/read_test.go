@@ -12,7 +12,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	digest "github.com/opencontainers/go-digest"
-	specs "github.com/opencontainers/image-spec/specs-go"
 	oci "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
@@ -392,33 +391,6 @@ func writeBlob(outDir string, blob interface{}) oci.Descriptor {
 		Size:   int64(len(data)),
 		Digest: digest.NewDigestFromEncoded(digest.SHA256, blobSha),
 	}
-}
-
-func writeConfig(outDir string, diffIds []digest.Digest) oci.Descriptor {
-	ic := oci.Image{
-		Platform: oci.Platform{
-			Architecture: "amd64",
-			OS:           "windows",
-		},
-		RootFS: oci.RootFS{Type: "layers", DiffIDs: diffIds},
-	}
-
-	d := writeBlob(outDir, ic)
-	d.MediaType = oci.MediaTypeImageConfig
-	return d
-}
-
-func writeManifest(outDir string, config oci.Descriptor, layers []oci.Descriptor) oci.Descriptor {
-	im := oci.Manifest{
-		Versioned: specs.Versioned{SchemaVersion: 2},
-		Config:    config,
-		Layers:    layers,
-	}
-
-	d := writeBlob(outDir, im)
-	d.MediaType = oci.MediaTypeImageManifest
-	d.Platform = &oci.Platform{OS: "windows", Architecture: "amd64"}
-	return d
 }
 
 func writeIndex(outDir string, i oci.Index) {
