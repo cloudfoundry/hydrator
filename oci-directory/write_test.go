@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -28,7 +27,7 @@ var _ = Describe("WriteMetadata", func() {
 
 	BeforeEach(func() {
 		var err error
-		outDir, err = ioutil.TempDir("", "oci-directory.write.test")
+		outDir, err = os.MkdirTemp("", "oci-directory.write.test")
 		Expect(err).NotTo(HaveOccurred())
 
 		layers = []oci.Descriptor{
@@ -51,7 +50,7 @@ var _ = Describe("WriteMetadata", func() {
 		Expect(h.WriteMetadata(layers, diffIds, layerAdded)).To(Succeed())
 
 		var il oci.ImageLayout
-		content, err := ioutil.ReadFile(filepath.Join(outDir, "oci-layout"))
+		content, err := os.ReadFile(filepath.Join(outDir, "oci-layout"))
 		Expect(err).NotTo(HaveOccurred())
 		Expect(json.Unmarshal(content, &il)).To(Succeed())
 		Expect(il.Version).To(Equal(specs.Version))
@@ -129,7 +128,7 @@ var _ = Describe("WriteMetadata", func() {
 
 func loadIndex(outDir string) oci.Index {
 	var ii oci.Index
-	content, err := ioutil.ReadFile(filepath.Join(outDir, "index.json"))
+	content, err := os.ReadFile(filepath.Join(outDir, "index.json"))
 	Expect(err).NotTo(HaveOccurred())
 	Expect(json.Unmarshal(content, &ii)).To(Succeed())
 
@@ -142,7 +141,7 @@ func loadManifest(outDir string) oci.Manifest {
 	manifestDescriptor := ii.Manifests[0]
 	manifestFile := filepath.Join(outDir, "blobs", manifestDescriptor.Digest.Algorithm().String(), manifestDescriptor.Digest.Encoded())
 
-	content, err := ioutil.ReadFile(manifestFile)
+	content, err := os.ReadFile(manifestFile)
 	Expect(err).NotTo(HaveOccurred())
 
 	var im oci.Manifest
@@ -155,7 +154,7 @@ func loadConfig(outDir string) oci.Image {
 
 	configFile := filepath.Join(outDir, "blobs", im.Config.Digest.Algorithm().String(), im.Config.Digest.Encoded())
 
-	content, err := ioutil.ReadFile(configFile)
+	content, err := os.ReadFile(configFile)
 	Expect(err).NotTo(HaveOccurred())
 
 	var ic oci.Image

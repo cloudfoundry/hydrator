@@ -2,7 +2,6 @@ package directory_test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"path/filepath"
 
 	directory "code.cloudfoundry.org/hydrator/oci-directory"
@@ -29,16 +28,16 @@ var _ = Describe("Handler", func() {
 
 	BeforeEach(func() {
 		var err error
-		ociImageDir, err = ioutil.TempDir("", "layermodifier.ociimagedir")
+		ociImageDir, err = os.MkdirTemp("", "layermodifier.ociimagedir")
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(os.MkdirAll(filepath.Join(ociImageDir, "blobs", "sha256"), 0755)).To(Succeed())
 
-		layerDir, err = ioutil.TempDir("", "oci-directory-layerdir")
+		layerDir, err = os.MkdirTemp("", "oci-directory-layerdir")
 		Expect(err).NotTo(HaveOccurred())
 
 		layerTgzPath = filepath.Join(layerDir, "my-new-layer.tgz")
-		Expect(ioutil.WriteFile(layerTgzPath, []byte(layerTgzContents), 0644)).To(Succeed())
+		Expect(os.WriteFile(layerTgzPath, []byte(layerTgzContents), 0644)).To(Succeed())
 
 		h = directory.NewHandler(ociImageDir)
 	})
@@ -56,7 +55,7 @@ var _ = Describe("Handler", func() {
 				}
 
 				Expect(h.AddBlob(layerTgzPath, layerDescriptor)).To(Succeed())
-				contents, err := ioutil.ReadFile(filepath.Join(ociImageDir, "blobs", "sha256", layerTgzSHA256))
+				contents, err := os.ReadFile(filepath.Join(ociImageDir, "blobs", "sha256", layerTgzSHA256))
 				Expect(err).NotTo(HaveOccurred())
 				Expect(string(contents)).To(Equal(layerTgzContents))
 			})
@@ -93,12 +92,12 @@ var _ = Describe("Handler", func() {
 				})
 
 				It("removes the layer from the blobs/sha256 sub directory", func() {
-					_, err := ioutil.ReadFile(filepath.Join(ociImageDir, "blobs", "sha256", layerTgzSHA256))
+					_, err := os.ReadFile(filepath.Join(ociImageDir, "blobs", "sha256", layerTgzSHA256))
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(h.RemoveTopBlob(layerTgzSHA256)).To(Succeed())
 
-					_, err = ioutil.ReadFile(filepath.Join(ociImageDir, "blobs", "sha256", layerTgzSHA256))
+					_, err = os.ReadFile(filepath.Join(ociImageDir, "blobs", "sha256", layerTgzSHA256))
 					Expect(err).To(HaveOccurred())
 				})
 			})
@@ -203,7 +202,7 @@ var _ = Describe("Handler", func() {
 })
 
 func numBlobs(ociImageDir string) int {
-	infos, err := ioutil.ReadDir(filepath.Join(ociImageDir, "blobs", "sha256"))
+	infos, err := os.ReadDir(filepath.Join(ociImageDir, "blobs", "sha256"))
 	Expect(err).NotTo(HaveOccurred())
 	return len(infos)
 }

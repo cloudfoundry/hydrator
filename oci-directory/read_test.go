@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -12,7 +11,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	digest "github.com/opencontainers/go-digest"
-	specs "github.com/opencontainers/image-spec/specs-go"
 	oci "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
@@ -39,7 +37,7 @@ var _ = Describe("ReadMetadata", func() {
 
 	BeforeEach(func() {
 		var err error
-		srcDir, err = ioutil.TempDir("", "windows2016fs.metadata.reader")
+		srcDir, err = os.MkdirTemp("", "windows2016fs.metadata.reader")
 		Expect(err).NotTo(HaveOccurred())
 
 		diffIds = []digest.Digest{
@@ -124,7 +122,7 @@ var _ = Describe("ReadMetadata", func() {
 
 			newSha = fmt.Sprintf("%x", sha256.Sum256(manifestData))
 
-			Expect(ioutil.WriteFile(manifestFile, manifestData, 0644)).To(Succeed())
+			Expect(os.WriteFile(manifestFile, manifestData, 0644)).To(Succeed())
 		})
 
 		It("returns a descriptive error", func() {
@@ -222,7 +220,7 @@ var _ = Describe("ReadMetadata", func() {
 
 			newSha = fmt.Sprintf("%x", sha256.Sum256(configData))
 
-			Expect(ioutil.WriteFile(configFile, configData, 0644)).To(Succeed())
+			Expect(os.WriteFile(configFile, configData, 0644)).To(Succeed())
 		})
 
 		It("returns a descriptive error", func() {
@@ -330,7 +328,7 @@ var _ = Describe("ReadMetadata", func() {
 
 			newContents := []byte("a-different-layer")
 			newSha = fmt.Sprintf("%x", sha256.Sum256(newContents))
-			Expect(ioutil.WriteFile(layerFile, newContents, 0644)).To(Succeed())
+			Expect(os.WriteFile(layerFile, newContents, 0644)).To(Succeed())
 		})
 
 		It("returns a descriptive error", func() {
@@ -372,7 +370,7 @@ func writeLayer(outDir string, contents string) digest.Digest {
 	blobsDir := filepath.Join(outDir, "blobs", "sha256")
 	Expect(os.MkdirAll(blobsDir, 0755)).To(Succeed())
 
-	Expect(ioutil.WriteFile(filepath.Join(blobsDir, blobSha), []byte(contents), 0644)).To(Succeed())
+	Expect(os.WriteFile(filepath.Join(blobsDir, blobSha), []byte(contents), 0644)).To(Succeed())
 
 	return digest.NewDigestFromEncoded(digest.SHA256, blobSha)
 }
@@ -386,7 +384,7 @@ func writeBlob(outDir string, blob interface{}) oci.Descriptor {
 	blobsDir := filepath.Join(outDir, "blobs", "sha256")
 	Expect(os.MkdirAll(blobsDir, 0755)).To(Succeed())
 
-	Expect(ioutil.WriteFile(filepath.Join(blobsDir, blobSha), data, 0644)).To(Succeed())
+	Expect(os.WriteFile(filepath.Join(blobsDir, blobSha), data, 0644)).To(Succeed())
 
 	return oci.Descriptor{
 		Size:   int64(len(data)),
@@ -394,35 +392,8 @@ func writeBlob(outDir string, blob interface{}) oci.Descriptor {
 	}
 }
 
-func writeConfig(outDir string, diffIds []digest.Digest) oci.Descriptor {
-	ic := oci.Image{
-		Platform: oci.Platform{
-			Architecture: "amd64",
-			OS:           "windows",
-		},
-		RootFS: oci.RootFS{Type: "layers", DiffIDs: diffIds},
-	}
-
-	d := writeBlob(outDir, ic)
-	d.MediaType = oci.MediaTypeImageConfig
-	return d
-}
-
-func writeManifest(outDir string, config oci.Descriptor, layers []oci.Descriptor) oci.Descriptor {
-	im := oci.Manifest{
-		Versioned: specs.Versioned{SchemaVersion: 2},
-		Config:    config,
-		Layers:    layers,
-	}
-
-	d := writeBlob(outDir, im)
-	d.MediaType = oci.MediaTypeImageManifest
-	d.Platform = &oci.Platform{OS: "windows", Architecture: "amd64"}
-	return d
-}
-
 func writeIndex(outDir string, i oci.Index) {
 	data, err := json.Marshal(i)
 	Expect(err).NotTo(HaveOccurred())
-	Expect(ioutil.WriteFile(filepath.Join(outDir, "index.json"), data, 0644)).To(Succeed())
+	Expect(os.WriteFile(filepath.Join(outDir, "index.json"), data, 0644)).To(Succeed())
 }

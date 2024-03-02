@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -38,7 +37,7 @@ func NewHelpers(wincBin, grootBin, grootImageStore, diffBin, hydrateBin string, 
 
 	if h.debug {
 		var err error
-		h.logFile, err = ioutil.TempFile("", "log")
+		h.logFile, err = os.CreateTemp("", "log")
 		ExpectWithOffset(1, err).ToNot(HaveOccurred())
 	}
 	return h
@@ -57,7 +56,7 @@ func (h *Helpers) CreateHelloLayer(rootfsURI string) string {
 
 	h.DeleteContainer(containerId)
 
-	layerDir, err := ioutil.TempDir("", "diffoutput")
+	layerDir, err := os.MkdirTemp("", "diffoutput")
 	Expect(err).To(Succeed())
 
 	newLayer := filepath.Join(layerDir, "hello-layer")
@@ -81,7 +80,7 @@ func (h *Helpers) CopyOciImage(ociImagePath, newOciImagePath string) {
 	copyFile(filepath.Join(ociImagePath, "oci-layout"), filepath.Join(newOciImagePath, "oci-layout"))
 
 	blobsPath := filepath.Join(ociImagePath, "blobs", "sha256")
-	files, err := ioutil.ReadDir(blobsPath)
+	files, err := os.ReadDir(blobsPath)
 	Expect(err).NotTo(HaveOccurred())
 	for _, file := range files {
 		blobName := file.Name()
@@ -114,11 +113,11 @@ func (h *Helpers) GenerateBundle(bundleSpec specs.Spec, bundlePath string) {
 	config, err := json.Marshal(&bundleSpec)
 	ExpectWithOffset(1, err).NotTo(HaveOccurred())
 	configFile := filepath.Join(bundlePath, "config.json")
-	ExpectWithOffset(1, ioutil.WriteFile(configFile, config, 0666)).To(Succeed())
+	ExpectWithOffset(1, os.WriteFile(configFile, config, 0666)).To(Succeed())
 }
 
 func (h *Helpers) CreateContainer(rootfsURI string) (string, string) {
-	bundlePath, err := ioutil.TempDir("", "winccontainer")
+	bundlePath, err := os.MkdirTemp("", "winccontainer")
 	Expect(err).ToNot(HaveOccurred())
 
 	containerId := filepath.Base(bundlePath)
@@ -213,7 +212,8 @@ func (h *Helpers) Execute(c *exec.Cmd) (*bytes.Buffer, *bytes.Buffer, error) {
 }
 
 func (h *Helpers) ExecCommand(command string, args ...string) *exec.Cmd {
-	allArgs := []string{}
+	var allArgs []string
+
 	if h.debug {
 		allArgs = append([]string{"--log", h.logFile.Name(), "--debug"}, args...)
 	} else {
