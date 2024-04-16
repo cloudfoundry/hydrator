@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.0.0-20240409162627-dfb032b3bdac
+# code.cloudfoundry.org/archiver v0.0.0-20240415163122-70ebdf625015
 ## explicit; go 1.20
 code.cloudfoundry.org/archiver/extractor
 # github.com/Microsoft/go-winio v0.6.1
@@ -84,7 +84,7 @@ github.com/google/go-containerregistry/pkg/v1/match
 github.com/google/go-containerregistry/pkg/v1/partial
 github.com/google/go-containerregistry/pkg/v1/tarball
 github.com/google/go-containerregistry/pkg/v1/types
-# github.com/google/pprof v0.0.0-20240409012703-83162a5b38cd
+# github.com/google/pprof v0.0.0-20240415144954-be81aee2d733
 ## explicit; go 1.19
 github.com/google/pprof/profile
 # github.com/klauspost/compress v1.17.8
@@ -226,7 +226,7 @@ golang.org/x/tools/internal/stdlib
 golang.org/x/tools/internal/tokeninternal
 golang.org/x/tools/internal/typesinternal
 golang.org/x/tools/internal/versions
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20240415141817-7cd4c1c1f9ec
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20240415180920-8c6c420018be
 ## explicit; go 1.19
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.63.2
