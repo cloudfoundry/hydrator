@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.0.0-20240508165157-a062c38fba66
+# code.cloudfoundry.org/archiver v0.0.0-20240509165302-47ab3c8fd0e8
 ## explicit; go 1.20
 code.cloudfoundry.org/archiver/extractor
 # github.com/Microsoft/go-winio v0.6.2
@@ -204,7 +204,7 @@ golang.org/x/text/transform
 ## explicit; go 1.19
 golang.org/x/tools/cover
 golang.org/x/tools/go/ast/inspector
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20240506185236-b8a5c65736ae
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20240509183442-62759503f434
 ## explicit; go 1.19
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.63.2
