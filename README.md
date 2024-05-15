@@ -1,24 +1,19 @@
-# Contributing
+# hydrator
 
-See the [Contributing.md](./.github/CONTRIBUTING.md) for more
-information on how to contribute.
+[![Go Report
+Card](https://goreportcard.com/badge/code.cloudfoundry.org/hydrator)](https://goreportcard.com/report/code.cloudfoundry.org/hydrator)
+[![Go
+Reference](https://pkg.go.dev/badge/code.cloudfoundry.org/hydrator.svg)](https://pkg.go.dev/code.cloudfoundry.org/hydrator)
 
-# Working Group Charter
+The `hydrator` downloads Docker images and lays them out on disk in [OCI
+image format](https://github.com/opencontainers/image-spec). It can also
+be used to add and remove layers to/from the OCI image. (see
+`add-layer`, `remove-layer` option)
 
-This repository is maintained by [App Runtime
-Platform](https://github.com/cloudfoundry/community/blob/main/toc/working-groups/app-runtime-platform.md)
-under `Diego` area.
-
-# Contributing
-
-See the [Contributing.md](./.github/CONTRIBUTING.md) for more
-information on how to contribute.
-
-# Working Group Charter
-
-This repository is maintained by [App Runtime
-Platform](https://github.com/cloudfoundry/community/blob/main/toc/working-groups/app-runtime-platform.md)
-under `Networking` area.
+> \[!NOTE\]
+>
+> This repository should be imported as
+> `code.cloudfoundry.org/hydrator`.
 
 # Contributing
 
@@ -29,7 +24,7 @@ information on how to contribute.
 
 This repository is maintained by [App Runtime
 Platform](https://github.com/cloudfoundry/community/blob/main/toc/working-groups/app-runtime-platform.md)
-under `Diego` area.
+under `Garden Containers` area.
 
 > \[!IMPORTANT\]
 >
