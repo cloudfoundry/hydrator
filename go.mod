@@ -8,7 +8,7 @@ require (
 	code.cloudfoundry.org/archiver v0.0.0-20240522170718-c5e8bbd9d152
 	github.com/Microsoft/hcsshim v0.12.3
 	github.com/google/go-containerregistry v0.19.1
-	github.com/onsi/ginkgo/v2 v2.18.0
+	github.com/onsi/ginkgo/v2 v2.19.0
 	github.com/onsi/gomega v1.33.1
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opencontainers/image-spec v1.1.0
