@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.8
 
 require (
-	code.cloudfoundry.org/archiver v0.0.0-20240622173936-7869beba5df1
+	code.cloudfoundry.org/archiver v0.0.0-20240625174243-6d58e629a167
 	github.com/Microsoft/hcsshim v0.12.4
 	github.com/google/go-containerregistry v0.19.2
 	github.com/onsi/ginkgo/v2 v2.19.0
