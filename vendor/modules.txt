@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.0.0-20240625174243-6d58e629a167
+# code.cloudfoundry.org/archiver v0.0.0-20240704175131-0862adba0fcb
 ## explicit; go 1.20
 code.cloudfoundry.org/archiver/extractor
 # github.com/Microsoft/go-winio v0.6.2
@@ -167,7 +167,7 @@ go.opencensus.io/internal
 go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/tracestate
-# golang.org/x/net v0.26.0
+# golang.org/x/net v0.27.0
 ## explicit; go 1.18
 golang.org/x/net/context
 golang.org/x/net/html
