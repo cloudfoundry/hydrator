@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.8
 
 require (
-	code.cloudfoundry.org/archiver v0.0.0-20240711175833-dbc7231e030c
+	code.cloudfoundry.org/archiver v0.0.0-20240721180611-c2584b8e38c2
 	github.com/Microsoft/hcsshim v0.12.5
 	github.com/google/go-containerregistry v0.20.1
 	github.com/onsi/ginkgo/v2 v2.19.0
@@ -27,7 +27,7 @@ require (
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240721033354-7089f98c1d14 // indirect
+	github.com/google/pprof v0.0.0-20240722153945-304e4f0156b8 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -40,7 +40,7 @@ require (
 	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240711142825-46eb208f015d // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240722135656-d784300faade // indirect
 	google.golang.org/grpc v1.65.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
