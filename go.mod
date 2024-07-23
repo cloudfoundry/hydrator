@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.8
 
 require (
-	code.cloudfoundry.org/archiver v0.0.0-20240721180611-c2584b8e38c2
+	code.cloudfoundry.org/archiver v0.0.0-20240722180632-5229c1a5255a
 	github.com/Microsoft/hcsshim v0.12.5
 	github.com/google/go-containerregistry v0.20.1
 	github.com/onsi/ginkgo/v2 v2.19.0
@@ -22,7 +22,7 @@ require (
 	github.com/containerd/errdefs v0.1.0 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.15.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
-	github.com/cyphar/filepath-securejoin v0.3.0 // indirect
+	github.com/cyphar/filepath-securejoin v0.3.1 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
