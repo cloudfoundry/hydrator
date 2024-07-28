@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.0.0-20240726181220-782560461ee5
+# code.cloudfoundry.org/archiver v0.0.0-20240727181315-0f39e9f008f9
 ## explicit; go 1.20
 code.cloudfoundry.org/archiver/extractor
 # github.com/Microsoft/go-winio v0.6.2
