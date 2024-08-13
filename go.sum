@@ -1,6 +1,6 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
-code.cloudfoundry.org/archiver v0.0.0-20240808182454-16f3064ad053 h1:UZv1BjvxESA8hpzIxnPeVckWXpeliDYxa1arNMW0wEU=
-code.cloudfoundry.org/archiver v0.0.0-20240808182454-16f3064ad053/go.mod h1:YksdSiqDLV8ss7tsk255cTY0OmRkU939itafwlCGcbc=
+code.cloudfoundry.org/archiver v0.1.0 h1:S5NtQjQHTdIiwKpyVIYSh46ziPh8QnE4xsi2BWUVJsE=
+code.cloudfoundry.org/archiver v0.1.0/go.mod h1:YksdSiqDLV8ss7tsk255cTY0OmRkU939itafwlCGcbc=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/toml v1.3.2/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/Microsoft/go-winio v0.6.2 h1:F2VQgta7ecxGYO8k3ZZz3RS8fVIXVxONVUPlNERoyfY=
