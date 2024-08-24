@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.21.8
 
 require (
-	code.cloudfoundry.org/archiver v0.2.0
+	code.cloudfoundry.org/archiver v0.3.0
 	github.com/Microsoft/hcsshim v0.12.6
 	github.com/google/go-containerregistry v0.20.2
 	github.com/onsi/ginkgo/v2 v2.20.1
@@ -41,7 +41,7 @@ require (
 	golang.org/x/sys v0.24.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/tools v0.24.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240822170219-fc7c04adadcd // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240823204242-4ba0660f739c // indirect
 	google.golang.org/grpc v1.65.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
