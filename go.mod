@@ -5,7 +5,7 @@ go 1.22
 toolchain go1.22.3
 
 require (
-	code.cloudfoundry.org/archiver v0.7.0
+	code.cloudfoundry.org/archiver v0.8.0
 	github.com/Microsoft/hcsshim v0.12.6
 	github.com/google/go-containerregistry v0.20.2
 	github.com/onsi/ginkgo/v2 v2.20.2
@@ -35,7 +35,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/vbatts/tar-split v0.11.5 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/net v0.28.0 // indirect
+	golang.org/x/net v0.29.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
