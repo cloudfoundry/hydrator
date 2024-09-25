@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.10.0
+# code.cloudfoundry.org/archiver v0.11.0
 ## explicit; go 1.22.0
 code.cloudfoundry.org/archiver/extractor
 # github.com/Microsoft/go-winio v0.6.2
@@ -87,8 +87,8 @@ github.com/google/go-containerregistry/pkg/v1/types
 # github.com/google/pprof v0.0.0-20240910150728-a0b0bb1d4134
 ## explicit; go 1.22
 github.com/google/pprof/profile
-# github.com/klauspost/compress v1.17.9
-## explicit; go 1.20
+# github.com/klauspost/compress v1.17.10
+## explicit; go 1.21
 github.com/klauspost/compress
 github.com/klauspost/compress/fse
 github.com/klauspost/compress/huff0
@@ -204,10 +204,10 @@ golang.org/x/text/transform
 ## explicit; go 1.22.0
 golang.org/x/tools/cover
 golang.org/x/tools/go/ast/inspector
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20240903143218-8af14fe29dc1
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20240924160255-9d4c2d233b61
 ## explicit; go 1.21
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.66.2
+# google.golang.org/grpc v1.67.0
 ## explicit; go 1.21
 google.golang.org/grpc/codes
 google.golang.org/grpc/connectivity
