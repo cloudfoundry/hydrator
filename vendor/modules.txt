@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.11.0
+# code.cloudfoundry.org/archiver v0.12.0
 ## explicit; go 1.22.0
 code.cloudfoundry.org/archiver/extractor
 # github.com/Microsoft/go-winio v0.6.2
@@ -9,7 +9,7 @@ github.com/Microsoft/go-winio/internal/socket
 github.com/Microsoft/go-winio/internal/stringbuffer
 github.com/Microsoft/go-winio/pkg/guid
 github.com/Microsoft/go-winio/vhd
-# github.com/Microsoft/hcsshim v0.12.6
+# github.com/Microsoft/hcsshim v0.12.7
 ## explicit; go 1.21
 github.com/Microsoft/hcsshim
 github.com/Microsoft/hcsshim/computestorage
@@ -49,8 +49,8 @@ github.com/containerd/stargz-snapshotter/estargz/errorutil
 # github.com/cpuguy83/go-md2man/v2 v2.0.5
 ## explicit; go 1.11
 github.com/cpuguy83/go-md2man/v2/md2man
-# github.com/cyphar/filepath-securejoin v0.3.2
-## explicit; go 1.20
+# github.com/cyphar/filepath-securejoin v0.3.3
+## explicit; go 1.21
 github.com/cyphar/filepath-securejoin
 # github.com/go-logr/logr v1.4.2
 ## explicit; go 1.18
@@ -84,7 +84,7 @@ github.com/google/go-containerregistry/pkg/v1/match
 github.com/google/go-containerregistry/pkg/v1/partial
 github.com/google/go-containerregistry/pkg/v1/tarball
 github.com/google/go-containerregistry/pkg/v1/types
-# github.com/google/pprof v0.0.0-20240910150728-a0b0bb1d4134
+# github.com/google/pprof v0.0.0-20241001023024-f4c0cfd0cf1d
 ## explicit; go 1.22
 github.com/google/pprof/profile
 # github.com/klauspost/compress v1.17.10
@@ -157,7 +157,7 @@ github.com/sirupsen/logrus
 # github.com/urfave/cli v1.22.15
 ## explicit; go 1.11
 github.com/urfave/cli
-# github.com/vbatts/tar-split v0.11.5
+# github.com/vbatts/tar-split v0.11.6
 ## explicit; go 1.17
 github.com/vbatts/tar-split/archive/tar
 # go.opencensus.io v0.24.0
@@ -204,10 +204,10 @@ golang.org/x/text/transform
 ## explicit; go 1.22.0
 golang.org/x/tools/cover
 golang.org/x/tools/go/ast/inspector
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20240924160255-9d4c2d233b61
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20240930140551-af27646dc61f
 ## explicit; go 1.21
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.67.0
+# google.golang.org/grpc v1.67.1
 ## explicit; go 1.21
 google.golang.org/grpc/codes
 google.golang.org/grpc/connectivity
