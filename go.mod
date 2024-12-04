@@ -5,7 +5,7 @@ go 1.22.7
 toolchain go1.23.3
 
 require (
-	code.cloudfoundry.org/archiver v0.20.0
+	code.cloudfoundry.org/archiver v0.21.0
 	github.com/Microsoft/hcsshim v0.12.9
 	github.com/google/go-containerregistry v0.20.2
 	github.com/onsi/ginkgo/v2 v2.22.0
@@ -21,16 +21,16 @@ require (
 	github.com/containerd/cgroups/v3 v3.0.4 // indirect
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
-	github.com/containerd/stargz-snapshotter/estargz v0.16.1 // indirect
+	github.com/containerd/stargz-snapshotter/estargz v0.16.2 // indirect
 	github.com/containerd/typeurl/v2 v2.2.3 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
 	github.com/cyphar/filepath-securejoin v0.3.4 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20241122213907-cbe949e5a41b // indirect
+	github.com/google/pprof v0.0.0-20241203143554-1e3fdc7de467 // indirect
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -43,7 +43,7 @@ require (
 	golang.org/x/sys v0.27.0 // indirect
 	golang.org/x/text v0.20.0 // indirect
 	golang.org/x/tools v0.27.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20241118233622-e639e219e697 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20241202173237-19429a94021a // indirect
 	google.golang.org/grpc v1.68.0 // indirect
 	google.golang.org/protobuf v1.35.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
