@@ -57,7 +57,7 @@ github.com/containerd/typeurl/v2
 # github.com/cpuguy83/go-md2man/v2 v2.0.6
 ## explicit; go 1.12
 github.com/cpuguy83/go-md2man/v2/md2man
-# github.com/cyphar/filepath-securejoin v0.3.6
+# github.com/cyphar/filepath-securejoin v0.4.0
 ## explicit; go 1.18
 github.com/cyphar/filepath-securejoin
 # github.com/go-logr/logr v1.4.2
@@ -218,7 +218,7 @@ golang.org/x/tools/go/ast/inspector
 # google.golang.org/genproto/googleapis/rpc v0.0.0-20250106144421-5f5ef82da422
 ## explicit; go 1.22
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.69.2
+# google.golang.org/grpc v1.69.4
 ## explicit; go 1.22
 google.golang.org/grpc/codes
 google.golang.org/grpc/connectivity
