@@ -7,13 +7,13 @@ toolchain go1.24.3
 require (
 	code.cloudfoundry.org/archiver v0.38.0
 	github.com/Microsoft/hcsshim v0.13.0
-	github.com/google/go-containerregistry v0.20.5
+	github.com/google/go-containerregistry v0.20.6
 	github.com/onsi/ginkgo/v2 v2.23.4
 	github.com/onsi/gomega v1.37.0
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opencontainers/image-spec v1.1.1
 	github.com/opencontainers/runtime-spec v1.2.1
-	github.com/urfave/cli v1.22.16
+	github.com/urfave/cli v1.22.17
 )
 
 require (
