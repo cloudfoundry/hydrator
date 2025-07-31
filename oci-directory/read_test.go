@@ -29,10 +29,12 @@ var _ = Describe("ReadMetadata", func() {
 		layer1 = "some-gzipped-data"
 		layer2 = "more-gzipped"
 		layer3 = "another-layer"
+		layer4 = "a-tar-layer"
 
 		layer1diffId = "dddddd"
 		layer2diffId = "eeeeee"
 		layer3diffId = "ffffff"
+		layer4diffId = "aaaaaa"
 	)
 
 	BeforeEach(func() {
@@ -44,6 +46,7 @@ var _ = Describe("ReadMetadata", func() {
 			digest.NewDigestFromEncoded("sha256", layer1diffId),
 			digest.NewDigestFromEncoded("sha256", layer2diffId),
 			digest.NewDigestFromEncoded("sha256", layer3diffId),
+			digest.NewDigestFromEncoded("sha256", layer4diffId),
 		}
 
 		config = oci.Image{
@@ -60,6 +63,7 @@ var _ = Describe("ReadMetadata", func() {
 			{Digest: writeLayer(srcDir, layer1), MediaType: oci.MediaTypeImageLayerGzip},
 			{Digest: writeLayer(srcDir, layer2), MediaType: oci.MediaTypeImageLayerGzip},
 			{Digest: writeLayer(srcDir, layer3), MediaType: oci.MediaTypeImageLayerGzip},
+			{Digest: writeLayer(srcDir, layer4), MediaType: oci.MediaTypeImageLayer},
 		}
 
 		manifest = oci.Manifest{
@@ -359,7 +363,7 @@ var _ = Describe("ReadMetadata", func() {
 		It("returns a descriptive error", func() {
 			_, _, err := h.ReadMetadata()
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("manifest + config mismatch: 2 layers, 3 diffIDs"))
+			Expect(err.Error()).To(ContainSubstring("manifest + config mismatch: 2 layers, 4 diffIDs"))
 		})
 	})
 })
