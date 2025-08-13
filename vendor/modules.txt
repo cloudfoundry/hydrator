@@ -184,7 +184,7 @@ go.uber.org/automaxprocs
 go.uber.org/automaxprocs/internal/cgroups
 go.uber.org/automaxprocs/internal/runtime
 go.uber.org/automaxprocs/maxprocs
-# golang.org/x/net v0.42.0
+# golang.org/x/net v0.43.0
 ## explicit; go 1.23.0
 golang.org/x/net/html
 golang.org/x/net/html/atom
@@ -192,12 +192,12 @@ golang.org/x/net/html/charset
 # golang.org/x/sync v0.16.0
 ## explicit; go 1.23.0
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.34.0
+# golang.org/x/sys v0.35.0
 ## explicit; go 1.23.0
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
-# golang.org/x/text v0.27.0
+# golang.org/x/text v0.28.0
 ## explicit; go 1.23.0
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
@@ -216,12 +216,12 @@ golang.org/x/text/internal/utf8internal
 golang.org/x/text/language
 golang.org/x/text/runes
 golang.org/x/text/transform
-# golang.org/x/tools v0.35.0
+# golang.org/x/tools v0.36.0
 ## explicit; go 1.23.0
 golang.org/x/tools/cover
 golang.org/x/tools/go/ast/edge
 golang.org/x/tools/go/ast/inspector
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20250804133106-a7a43d27e69b
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20250811230008-5f3141c8851a
 ## explicit; go 1.23.0
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.74.2
@@ -234,7 +234,7 @@ google.golang.org/grpc/internal
 google.golang.org/grpc/internal/status
 google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/status
-# google.golang.org/protobuf v1.36.6
+# google.golang.org/protobuf v1.36.7
 ## explicit; go 1.22
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext
