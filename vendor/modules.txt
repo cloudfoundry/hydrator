@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.43.0
+# code.cloudfoundry.org/archiver v0.44.0
 ## explicit; go 1.24.0
 code.cloudfoundry.org/archiver/extractor
 # github.com/Masterminds/semver/v3 v3.4.0
@@ -98,7 +98,7 @@ github.com/google/go-containerregistry/pkg/v1/match
 github.com/google/go-containerregistry/pkg/v1/partial
 github.com/google/go-containerregistry/pkg/v1/tarball
 github.com/google/go-containerregistry/pkg/v1/types
-# github.com/google/pprof v0.0.0-20250820193118-f64d9cf942d6
+# github.com/google/pprof v0.0.0-20250902232947-5eec23c92c42
 ## explicit; go 1.24.0
 github.com/google/pprof/profile
 # github.com/klauspost/compress v1.18.0
@@ -111,7 +111,7 @@ github.com/klauspost/compress/internal/le
 github.com/klauspost/compress/internal/snapref
 github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
-# github.com/onsi/ginkgo/v2 v2.25.1
+# github.com/onsi/ginkgo/v2 v2.25.2
 ## explicit; go 1.23.0
 github.com/onsi/ginkgo/v2
 github.com/onsi/ginkgo/v2/config

@@ -5,10 +5,10 @@ go 1.24.0
 toolchain go1.24.3
 
 require (
-	code.cloudfoundry.org/archiver v0.43.0
+	code.cloudfoundry.org/archiver v0.44.0
 	github.com/Microsoft/hcsshim v0.13.0
 	github.com/google/go-containerregistry v0.20.6
-	github.com/onsi/ginkgo/v2 v2.25.1
+	github.com/onsi/ginkgo/v2 v2.25.2
 	github.com/onsi/gomega v1.38.2
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opencontainers/image-spec v1.1.1
@@ -31,7 +31,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/google/pprof v0.0.0-20250820193118-f64d9cf942d6 // indirect
+	github.com/google/pprof v0.0.0-20250902232947-5eec23c92c42 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
