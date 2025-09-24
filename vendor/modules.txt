@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.46.0
+# code.cloudfoundry.org/archiver v0.47.0
 ## explicit; go 1.24.0
 code.cloudfoundry.org/archiver/extractor
 # github.com/Masterminds/semver/v3 v3.4.0
@@ -98,7 +98,7 @@ github.com/google/go-containerregistry/pkg/v1/match
 github.com/google/go-containerregistry/pkg/v1/partial
 github.com/google/go-containerregistry/pkg/v1/tarball
 github.com/google/go-containerregistry/pkg/v1/types
-# github.com/google/pprof v0.0.0-20250903194437-c28834ac2320
+# github.com/google/pprof v0.0.0-20250923004556-9e5a51aed1e8
 ## explicit; go 1.24.0
 github.com/google/pprof/profile
 # github.com/klauspost/compress v1.18.0
@@ -227,7 +227,7 @@ golang.org/x/text/transform
 golang.org/x/tools/cover
 golang.org/x/tools/go/ast/edge
 golang.org/x/tools/go/ast/inspector
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20250908214217-97024824d090
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20250922171735-9219d122eba9
 ## explicit; go 1.24.0
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.75.1
