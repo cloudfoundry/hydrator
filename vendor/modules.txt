@@ -1,5 +1,5 @@
-# code.cloudfoundry.org/archiver v0.55.0
-## explicit; go 1.24.0
+# code.cloudfoundry.org/archiver v0.56.0
+## explicit; go 1.24.9
 code.cloudfoundry.org/archiver/extractor
 # github.com/Masterminds/semver/v3 v3.4.0
 ## explicit; go 1.21
@@ -99,7 +99,7 @@ github.com/google/go-containerregistry/pkg/v1/match
 github.com/google/go-containerregistry/pkg/v1/partial
 github.com/google/go-containerregistry/pkg/v1/tarball
 github.com/google/go-containerregistry/pkg/v1/types
-# github.com/google/pprof v0.0.0-20251208000136-3d256cb9ff16
+# github.com/google/pprof v0.0.0-20251213031049-b05bdaca462f
 ## explicit; go 1.24.9
 github.com/google/pprof/profile
 # github.com/klauspost/compress v1.18.2
@@ -244,7 +244,7 @@ golang.org/x/tools/internal/stdlib
 golang.org/x/tools/internal/typeparams
 golang.org/x/tools/internal/typesinternal
 golang.org/x/tools/internal/versions
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20251202230838-ff82c1b0f217
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20251213004720-97cd9d5aeac2
 ## explicit; go 1.24.0
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.77.0
@@ -257,7 +257,7 @@ google.golang.org/grpc/internal
 google.golang.org/grpc/internal/status
 google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/status
-# google.golang.org/protobuf v1.36.10
+# google.golang.org/protobuf v1.36.11
 ## explicit; go 1.23
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext
