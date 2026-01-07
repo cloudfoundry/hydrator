@@ -3,7 +3,7 @@ module code.cloudfoundry.org/hydrator
 go 1.24.9
 
 require (
-	code.cloudfoundry.org/archiver v0.56.0
+	code.cloudfoundry.org/archiver v0.58.0
 	github.com/Microsoft/hcsshim v0.13.0
 	github.com/google/go-containerregistry v0.20.7
 	github.com/onsi/ginkgo/v2 v2.27.3
@@ -29,7 +29,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/google/pprof v0.0.0-20251213031049-b05bdaca462f // indirect
+	github.com/google/pprof v0.0.0-20260106004452-d7df1bf2cac7 // indirect
 	github.com/klauspost/compress v1.18.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
