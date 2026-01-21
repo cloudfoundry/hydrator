@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.59.0
+# code.cloudfoundry.org/archiver v0.60.0
 ## explicit; go 1.24.9
 code.cloudfoundry.org/archiver/extractor
 # github.com/Masterminds/semver/v3 v3.4.0
@@ -99,10 +99,10 @@ github.com/google/go-containerregistry/pkg/v1/match
 github.com/google/go-containerregistry/pkg/v1/partial
 github.com/google/go-containerregistry/pkg/v1/tarball
 github.com/google/go-containerregistry/pkg/v1/types
-# github.com/google/pprof v0.0.0-20260111202518-71be6bfdd440
+# github.com/google/pprof v0.0.0-20260115054156-294ebfa9ad83
 ## explicit; go 1.24.0
 github.com/google/pprof/profile
-# github.com/klauspost/compress v1.18.2
+# github.com/klauspost/compress v1.18.3
 ## explicit; go 1.23
 github.com/klauspost/compress
 github.com/klauspost/compress/fse
@@ -168,8 +168,8 @@ github.com/pkg/errors
 # github.com/russross/blackfriday/v2 v2.1.0
 ## explicit
 github.com/russross/blackfriday/v2
-# github.com/sirupsen/logrus v1.9.3
-## explicit; go 1.13
+# github.com/sirupsen/logrus v1.9.4
+## explicit; go 1.17
 github.com/sirupsen/logrus
 # github.com/urfave/cli v1.22.17
 ## explicit; go 1.11
@@ -244,7 +244,7 @@ golang.org/x/tools/internal/stdlib
 golang.org/x/tools/internal/typeparams
 golang.org/x/tools/internal/typesinternal
 golang.org/x/tools/internal/versions
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20260112192933-99fd39fd28a9
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20260120221211-b8f7ae30c516
 ## explicit; go 1.24.0
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.78.0
