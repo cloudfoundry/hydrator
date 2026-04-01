@@ -4,7 +4,7 @@ go 1.25.7
 
 require (
 	code.cloudfoundry.org/archiver v0.65.0
-	github.com/Microsoft/hcsshim v0.13.0
+	github.com/Microsoft/hcsshim v0.14.0
 	github.com/google/go-containerregistry v0.21.3
 	github.com/onsi/ginkgo/v2 v2.28.1
 	github.com/onsi/gomega v1.39.1
@@ -43,7 +43,7 @@ require (
 	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.35.0 // indirect
 	golang.org/x/tools v0.43.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260319201613-d00831a3d3e7 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260401001100-f93e5f3e9f0f // indirect
 	google.golang.org/grpc v1.79.3 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 )
