@@ -1,5 +1,5 @@
-# code.cloudfoundry.org/archiver v0.87.0
-## explicit; go 1.25.0
+# code.cloudfoundry.org/archiver v0.88.0
+## explicit; go 1.26.0
 code.cloudfoundry.org/archiver/extractor
 # github.com/Masterminds/semver/v3 v3.5.0
 ## explicit; go 1.21
@@ -104,7 +104,7 @@ github.com/klauspost/compress/internal/le
 github.com/klauspost/compress/internal/snapref
 github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
-# github.com/onsi/ginkgo/v2 v2.32.1
+# github.com/onsi/ginkgo/v2 v2.32.2
 ## explicit; go 1.25.0
 github.com/onsi/ginkgo/v2
 github.com/onsi/ginkgo/v2/config
@@ -232,7 +232,7 @@ golang.org/x/tools/internal/pkgbits
 golang.org/x/tools/internal/stdlib
 golang.org/x/tools/internal/typesinternal
 golang.org/x/tools/internal/versions
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20260908043556-f8649ddbbfe6
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20260911204522-f61a6ca850bd
 ## explicit; go 1.25.0
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.83.2
