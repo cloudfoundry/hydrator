@@ -1,6 +1,6 @@
 module code.cloudfoundry.org/hydrator
 
-go 1.26.0
+go 1.27.0
 
 require (
 	code.cloudfoundry.org/archiver v0.89.0

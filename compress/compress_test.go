@@ -24,7 +24,7 @@ var _ = Describe("Compress", func() {
 			outputFile string
 		)
 
-		const outputTarSha = "e96a891c69c40717b7f015a53fd7d4455af705a4a935126aa7df16134b8698dd"
+		const outputTarSha = "1d3dcce6b671d4f6c583dfc93e0542066d3cb58c365d646aae794d7482c9c537"
 
 		BeforeEach(func() {
 			var err error

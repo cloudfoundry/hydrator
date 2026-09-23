@@ -70,8 +70,8 @@ var _ = Describe("LayerModifier", func() {
 			const (
 				layerContents       = "some tar bytes"
 				layerContentsSHA256 = "c5e8527cdf40bbdf7bb4b806ae96fee03355246be338b1fe3954e498248a44ca"
-				gzippedSHA256       = "850e0c2747f004859b83554206506087e2e97f5bcabf316035c092e230ee0a60"
-				gzippedSize         = 38
+				gzippedSHA256       = "a16765f930154cf96f520121deddc56cb0c8abd130319275d5f5a0ad2c5e95ce"
+				gzippedSize         = 39
 			)
 
 			BeforeEach(func() {
