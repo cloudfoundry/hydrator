@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/archiver v0.94.0
+# code.cloudfoundry.org/archiver v0.95.0
 ## explicit; go 1.26.0
 code.cloudfoundry.org/archiver/extractor
 # github.com/Masterminds/semver/v3 v3.5.0
@@ -86,7 +86,7 @@ github.com/google/go-containerregistry/pkg/v1/match
 github.com/google/go-containerregistry/pkg/v1/partial
 github.com/google/go-containerregistry/pkg/v1/tarball
 github.com/google/go-containerregistry/pkg/v1/types
-# github.com/google/pprof v0.0.0-20261026192309-dbd0ed30aa88
+# github.com/google/pprof v0.0.0-20261103193413-97e8293de3c4
 ## explicit; go 1.26.0
 github.com/google/pprof/profile
 # github.com/google/uuid v1.6.0
@@ -103,7 +103,7 @@ github.com/klauspost/compress/internal/regmask
 github.com/klauspost/compress/internal/snapref
 github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
-# github.com/onsi/ginkgo/v2 v2.33.1
+# github.com/onsi/ginkgo/v2 v2.34.0
 ## explicit; go 1.25.0
 github.com/onsi/ginkgo/v2
 github.com/onsi/ginkgo/v2/config
@@ -211,7 +211,7 @@ go.opentelemetry.io/otel/trace
 go.opentelemetry.io/otel/trace/embedded
 go.opentelemetry.io/otel/trace/internal/telemetry
 go.opentelemetry.io/otel/trace/noop
-# go.yaml.in/yaml/v3 v3.0.5
+# go.yaml.in/yaml/v3 v3.0.6
 ## explicit; go 1.16
 go.yaml.in/yaml/v3
 # golang.org/x/mod v0.42.0
